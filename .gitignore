@@ -1,0 +1,16 @@
+/.pytest_cache
+/__pycache__
+/ball_simulation.py
+/config.json
+/config_loader.py
+/docs
+/models.py
+/outputs
+/physics.py
+/pytest.ini
+/reporting.py
+/requirements.txt
+/simulation.py
+/tests
+/validation.py
+/venv
