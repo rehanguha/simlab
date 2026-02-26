@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "A physics simulation library for modeling and analyzing physical systems"
 readme = "README.md"
 license = {file = "LICENSE"}
-authors = [{name = "Rehan Guha", email = "rehanguha@gmail.com"}]
+authors = [{name = "Rehan Guha", email = "rehanguha29@gmail.com"}]
 keywords = ["physics", "simulation", "mechanics", "aerodynamics", "science"]
 classifiers = [
     "Development Status :: 3 - Alpha",
