@@ -1,0 +1,140 @@
+{
+  "summary": {
+    "flight_time": 19.995000000000307,
+    "max_height": 100.0,
+    "horizontal_range": -0.07093701006113408,
+    "max_velocity": 37.37329314412078,
+    "ground_contacts": 5,
+    "max_mach": 0.10982550532624348,
+    "is_stable": true,
+    "energy_conserved": true,
+    "max_speed": 37.37329314412078,
+    "max_reynolds": 1029818.5370025274,
+    "bounce_count": 5,
+    "energy_loss": 9387.592631956335,
+    "energy_loss_pct": 95.69399715020374,
+    "max_energy_gain": 0,
+    "max_energy_gain_pct": 0.0
+  },
+  "config": {
+    "_comment": "Ball Drop Simulation Configuration File",
+    "_description": "Modify these parameters to run different simulation scenarios without editing code",
+    "ball": {
+      "_comment": "Ball physical properties",
+      "mass": 10.0,
+      "radius": 0.2,
+      "initial_velocity": 10.0,
+      "drop_angle_deg": 45.0,
+      "azimuth_deg": 0.0,
+      "spin_rps": 8.0,
+      "spin_axis": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    "position": {
+      "_comment": "Initial position coordinates",
+      "x0": 0.0,
+      "y0": 0.0,
+      "z0": 100.0
+    },
+    "surface": {
+      "_comment": "Ground surface properties",
+      "elasticity_base": 0.75,
+      "elasticity_drop": 0.0025,
+      "friction_mu_s": 0.55,
+      "friction_mu_k": 0.4,
+      "dampness": 0.1,
+      "wetness": 0.2,
+      "base_height": 0.5,
+      "slope_x": 0.02,
+      "slope_y": 0.0,
+      "rough_amp": 0.02,
+      "rough_lambda_x": 4.0,
+      "surface_roughness": 0.001,
+      "contact_stiffness": 5000000.0
+    },
+    "wind": {
+      "_comment": "Wind and atmospheric conditions",
+      "ref_speed": 2.5,
+      "ref_height": 100.0,
+      "shear_alpha": 0.14,
+      "direction_deg": 30.0,
+      "gust_tau": 1.5,
+      "gust_sigma": 0.8,
+      "humidity_pct": 60.0
+    },
+    "simulation": {
+      "_comment": "Simulation settings",
+      "g": 9.81,
+      "dt": 0.005,
+      "t_max": 20.0,
+      "seed": 42,
+      "adaptive_timestep": false,
+      "rtol": 0.0001,
+      "atol": 1e-06,
+      "min_dt": 1e-05,
+      "max_dt": 0.05,
+      "buoyancy": true,
+      "use_virtual_mass": true,
+      "use_multi_regime_cd": true,
+      "use_hertzian_contact": true,
+      "stop_speed_threshold": 0.05,
+      "stop_angular_threshold": 0.5,
+      "stop_hold_time": 0.5,
+      "c_spin_decay": 0.05,
+      "c_spin_aero": 0.02
+    },
+    "constants": {
+      "_comment": "Physical constants and coefficients",
+      "aerodynamics": {
+        "_comment": "Aerodynamic constants",
+        "R_dry": 287.058,
+        "R_vapor": 461.495,
+        "pressure_sea_level": 101325.0,
+        "magnus_coefficient": 0.5,
+        "stokes_coefficient": 24.0,
+        "intermediate_coefficient": 4.0,
+        "turbulent_cd": 0.47,
+        "sutherland_mu0": 1.716e-05,
+        "sutherland_t0": 273.15,
+        "sutherland_s": 110.4,
+        "gamma_air": 1.4
+      },
+      "mechanics": {
+        "_comment": "Mechanical constants",
+        "g_standard": 9.80665,
+        "earth_radius": 6371000,
+        "spin_decay_constant": 0.1,
+        "moment_inertia_factor": 0.4
+      },
+      "materials": {
+        "_comment": "Material properties",
+        "ball_density": 1200.0,
+        "surface_friction_static": 0.55,
+        "surface_friction_kinetic": 0.4,
+        "surface_restitution": 0.75,
+        "surface_roughness": 0.001
+      },
+      "environment": {
+        "_comment": "Standard environmental conditions",
+        "standard_temperature": 288.15,
+        "standard_humidity": 0.5,
+        "standard_pressure": 101325.0
+      }
+    },
+    "output": {
+      "_comment": "Output settings",
+      "run_name": "simulation",
+      "output_dir": "outputs",
+      "csv_file": "ball_drop_data_table.csv",
+      "plot_file": "ball_drop_2d_graph.png",
+      "html_file": "ball_drop_report.html",
+      "generate_video": true,
+      "video_fps": 30,
+      "verbose": true
+    }
+  },
+  "timestamp": "2026-02-24T21:59:28.908781"
+}

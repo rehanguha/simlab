@@ -34,38 +34,61 @@
 import simlab
 
 # Simple usage
-result = simlab.run()
-print(f"Flight time: {result.summary['flight_time']:.2f} s")
+result = simlab.run_simulation()
+print(f"Flight time: {result['summary']['flight_time']:.2f} s")
 
-# Advanced usage
-from simlab.scenarios import Drop
-from simlab.objects import Sphere
+# Advanced usage with configuration
+result = simlab.run_simulation(
+    config_path="config.json",
+    output_dir="./results"
+)
 
-ball = Sphere(mass=0.5, radius=0.1, spin_rate=8.0)
-drop = Drop(object=ball, initial_height=100.0)
-result = drop.run()
+# Batch simulations
+results = simlab.batch_simulation(
+    config_path="config.json",
+    parameters=[
+        {"name": "mass", "min": 0.1, "max": 1.0, "steps": 5},
+        {"name": "radius", "min": 0.05, "max": 0.2, "steps": 3}
+    ]
+)
 
-# Plotting
-result.plot_height()
-result.plot_trajectory_3d()
-result.save("./output")
+# Compare results
+comparison = simlab.compare_results(
+    "./result1", 
+    "./result2"
+)
+
+# Access results
+summary = result['summary']
+data = result['data']
+config = result['config']
+
+print(f"Flight time: {summary['flight_time']:.3f} seconds")
+print(f"Max height: {summary['max_height']:.2f} meters")
+print(f"Horizontal range: {summary['horizontal_range']:.2f} meters")
+
+# Save outputs
+output_files = result['output_files']
+print(f"CSV data: {output_files['data']}")
+print(f"HTML report: {output_files['html']}")
 ```
 
 ### 🖥️ Command Line Interface
 ```bash
 # Basic usage
-$ simlab run
+$ simlab run --config config.json
 $ simlab run --config config.yaml
 
 # Advanced usage
-$ simlab run --scenario drop --height 100 --mass 0.5
-$ simlab batch --param mass 0.1 0.5 1.0
-$ simlab compare result1 result2
+$ simlab run --config config.json --output ./results
+$ simlab batch --config config.json --param mass 0.1 0.5 5
+$ simlab compare ./result1 ./result2
 
-# Information
+# Information and management
 $ simlab list
 $ simlab info drop
 $ simlab version
+$ simlab init my_project --scenario drop
 ```
 
 ## 📦 Installation
@@ -91,27 +114,29 @@ pip install -e .
 
 ### 1. Basic Simulation
 ```bash
-# Run with default configuration
-simlab run
+# Run with configuration file (required)
+simlab run --config config.json
 
 # Run with custom configuration
-simlab run --config my_config.json
+simlab run --config my_config.json --output ./results
 ```
 
 ### 2. Python API
 ```python
 import simlab
 
-# Run simulation with defaults
-result = simlab.run()
+# Run simulation with configuration
+result = simlab.run_simulation(config_path="config.json")
 
 # Access results
-print(f"Flight time: {result.summary['flight_time']:.2f} seconds")
-print(f"Max height: {result.summary['max_height']:.2f} meters")
-print(f"Horizontal range: {result.summary['horizontal_range']:.2f} meters")
+summary = result['summary']
+print(f"Flight time: {summary['flight_time']:.3f} seconds")
+print(f"Max height: {summary['max_height']:.2f} meters")
+print(f"Horizontal range: {summary['horizontal_range']:.2f} meters")
 
-# Save outputs
-result.save("./my_results")
+# Get output files
+output_files = result['output_files']
+print(f"Data saved to: {output_files['data']}")
 ```
 
 ### 3. Configuration File
@@ -145,19 +170,18 @@ Create a `config.json` file:
 Run a simulation with specified configuration.
 
 ```bash
-simlab run [OPTIONS]
+simlab run --config CONFIG [OPTIONS]
 ```
 
+**Required:**
+- `--config, -c`: Configuration file path (JSON or YAML)
+
 **Options:**
-- `--config, -c`: Configuration file path (default: config.json)
 - `--output, -o`: Output directory (auto-generated if not specified)
 - `--quiet, -q`: Minimal output
 - `--verbose, -v`: Verbose output
-- `--scenario, -s`: Scenario type
-- `--height, -h`: Initial height (m)
-- `--mass, -m`: Mass (kg)
-- `--radius, -r`: Radius (m)
-- `--spin`: Spin rate (rev/s)
+
+**Note:** Individual parameters (height, mass, radius, spin) are no longer supported - use configuration files instead.
 
 ### `simlab batch`
 Run batch simulations with parameter sweep.
@@ -166,8 +190,14 @@ Run batch simulations with parameter sweep.
 simlab batch --config CONFIG --param PARAM [PARAM ...]
 ```
 
-**Parameters format:** `name min max steps`
-Example: `mass 0.1 0.5 5` (5 values from 0.1 to 0.5)
+**Required:**
+- `--config`: Base configuration file
+- `--param, -p`: Parameter to vary: `name min max steps`
+
+**Example:**
+```bash
+simlab batch --config config.json --param mass 0.1 0.5 5
+```
 
 ### `simlab compare`
 Compare two simulation results.
@@ -176,8 +206,22 @@ Compare two simulation results.
 simlab compare RESULT1 RESULT2
 ```
 
+**Arguments:**
+- `RESULT1`: First result directory
+- `RESULT2`: Second result directory
+
 ### `simlab list`
 List available scenarios.
+
+```bash
+simlab list
+```
+
+**Available scenarios:**
+- `drop`: Ball drop simulation with aerodynamics
+- `wind-tunnel`: Wind tunnel aerodynamics test
+- `terminal-velocity`: Terminal velocity measurement
+- `projectile`: Projectile motion with drag
 
 ### `simlab info`
 Show information about a scenario.
@@ -186,8 +230,15 @@ Show information about a scenario.
 simlab info [SCENARIO]
 ```
 
+**Arguments:**
+- `SCENARIO`: Scenario to show information for (default: drop)
+
 ### `simlab version`
 Show version information.
+
+```bash
+simlab version
+```
 
 ### `simlab init`
 Initialize a new SimLab project.
@@ -195,6 +246,13 @@ Initialize a new SimLab project.
 ```bash
 simlab init NAME --output DIR --scenario SCENARIO
 ```
+
+**Arguments:**
+- `NAME`: Project name
+
+**Options:**
+- `--output, -o`: Output directory (default: current directory)
+- `--scenario, -s`: Default scenario (default: drop)
 
 ## 🔬 Physics Models
 
@@ -246,37 +304,60 @@ Machine-readable summary and configuration:
 ```
 
 ### HTML Report
-Interactive Plotly report with:
+Interactive Plotly report with rich formatting:
 - 2D and 3D trajectory plots
 - Velocity and height over time
 - Physics parameter visualization
-- Summary statistics
+- Summary statistics with enhanced formatting
+- Rich terminal output display
 
-### Animated GIF
-Real-time trajectory animation with:
-- Ball position with trail
-- Velocity vector visualization
-- Ground contact highlights
-- Real-time statistics overlay
+### Static Plots
+High-quality matplotlib plots:
+- Trajectory visualization
+- Velocity components over time
+- Physics parameters analysis
+- Publication-ready formatting
+
+### Output Files Structure
+When running simulations, outputs are organized as:
+```
+outputs/
+├── data.csv              # Full trajectory data
+├── summary.json          # Results summary
+├── report.html           # Interactive HTML report
+├── plots/                # Static matplotlib plots
+│   ├── trajectory.png
+│   ├── velocity.png
+│   └── physics.png
+└── animation.gif         # Trajectory animation
+```
 
 ## 🏗️ Package Structure
 
 ```
 simlab/
-├── cli.py              # Typer CLI interface
-├── core.py             # Main simulation engine
-├── physics/            # Physics calculations
-│   ├── aerodynamics.py # Drag, lift, air properties
-│   └── mechanics.py    # Gravity, motion, collisions
+├── __init__.py         # Package entry point
+├── cli.py              # Typer CLI interface with rich formatting
+├── core.py             # Main simulation engine and API functions
 ├── config/             # Configuration handling
+│   ├── __init__.py
 │   └── loader.py       # JSON/YAML loading and validation
-├── output/             # Output management
+├── objects/            # Physical object definitions
+│   └── __init__.py
+├── output/             # Output management and reporting
+│   ├── __init__.py
 │   ├── manager.py      # File saving and organization
-│   └── result.py       # Result object with plotting
-├── utils/              # Utilities and constants
-│   ├── constants.py    # Physical constants
-│   └── helpers.py      # Formatting functions
-└── __init__.py         # Package entry point
+│   └── result.py       # Result object with plotting capabilities
+├── physics/            # Physics calculations
+│   ├── __init__.py
+│   ├── aerodynamics.py # Drag, lift, air properties, Magnus effect
+│   └── mechanics.py    # Gravity, motion, collisions, spin decay
+├── scenarios/          # Predefined simulation scenarios
+│   └── __init__.py
+└── utils/              # Utilities and constants
+    ├── __init__.py
+    ├── constants.py    # Physical constants
+    └── helpers.py      # Formatting and utility functions
 ```
 
 ## 🧪 Testing
