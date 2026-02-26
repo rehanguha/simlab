@@ -119,12 +119,12 @@ dmypy.json
 Thumbs.db
 
 # Simulation outputs
-# outputs/
-# *.gif
-# *.png
-# *.html
-# *.csv
-# *.json
+outputs/
+*.gif
+*.png
+*.html
+*.csv
+*.json
 
 # Temporary files
 *.tmp
