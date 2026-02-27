@@ -122,7 +122,7 @@ Thumbs.db
 outputs/
 *.gif
 *.png
-*.html
+# *.html
 *.csv
 
 # Temporary files
