@@ -37,3 +37,28 @@ BASKETBALL_RADIUS = 0.119  # m
 DEFAULT_TIME_STEP = 0.001  # seconds
 DEFAULT_MAX_TIME = 30.0  # seconds
 DEFAULT_TOLERANCE = 1e-6  # numerical tolerance
+
+# Advanced physical constants for ISA model and aerodynamics
+PHYSICAL_CONSTANTS = {
+    # Gas constants
+    'R': 287.058,           # J/(kg·K) - gas constant for dry air
+    'R_v': 461.495,         # J/(kg·K) - gas constant for water vapor
+    'gamma': 1.4,           # - ratio of specific heats for air
+    
+    # Standard conditions
+    'T0': 288.15,           # K - standard temperature at sea level
+    'p0': 101325,           # Pa - standard pressure at sea level
+    'g': 9.80665,           # m/s² - standard gravity
+    
+    # Sutherland constants
+    'mu_ref': 1.716e-5,     # Pa·s - reference viscosity
+    'T_ref': 273.15,        # K - reference temperature
+    'S': 110.4,             # K - Sutherland constant
+    
+    # Temperature lapse rate
+    'L': 0.0065,            # K/m - temperature lapse rate
+    
+    # Material properties
+    'E_default': 1e7,       # Pa - default Young's modulus
+    'nu_default': 0.5,      # - default Poisson's ratio
+}

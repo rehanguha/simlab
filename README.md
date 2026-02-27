@@ -10,17 +10,20 @@
 ## 🚀 Features
 
 ### 📊 Advanced Physics
-- **Aerodynamics**: Drag force, Reynolds number, Mach number calculations
-- **Magnus Effect**: Spin-induced lift forces for realistic ball behavior
-- **Thermodynamics**: Temperature and humidity effects on air properties
-- **Ground Physics**: Elastic collisions with configurable surface properties
-- **Wind Effects**: Crosswind and turbulence simulation
+- **Aerodynamics**: Multi-regime drag coefficient, Reynolds number, Mach number calculations
+- **Magnus Effect**: Spin-induced lift forces with advanced correlations
+- **Thermodynamics**: Temperature and humidity effects on air properties (ISA model)
+- **Ground Physics**: Hertzian contact mechanics, advanced friction modeling, surface geometry
+- **Wind Effects**: Power law wind profiles, gust modeling, atmospheric turbulence
+- **Virtual Mass**: Added mass effects for realistic acceleration behavior
+- **Compressibility**: High-speed flow corrections
 
 ### 🎯 Multiple Scenarios
-- **Ball Drop**: Standard drop simulation with bounce physics
-- **Wind Tunnel**: Aerodynamics testing with controlled airflow
-- **Terminal Velocity**: Free fall with drag force analysis
-- **Projectile Motion**: Trajectory simulation with air resistance
+- **Ball Drop**: Standard drop simulation with advanced bounce physics
+- **Wind Tunnel**: Aerodynamics testing with controlled airflow and turbulence
+- **Terminal Velocity**: Free fall with complete drag force analysis
+- **Projectile Motion**: Trajectory simulation with full aerodynamic effects
+- **Spin Analysis**: Rotational dynamics with advanced decay modeling
 
 ### 📈 Rich Output
 - **CSV Data**: Full trajectory data with all physics parameters
@@ -28,13 +31,20 @@
 - **Animated GIFs**: Real-time trajectory animations
 - **High-Quality Plots**: Publication-ready static plots
 - **JSON Summary**: Machine-readable results and configuration
+- **Detailed Statistics**: Energy conservation, stability analysis, timestep monitoring
+
+### 🔧 Advanced Numerical Methods
+- **Adaptive Integration**: RK45 Dormand-Prince with error control
+- **Fixed-Step Euler**: For comparison and simple cases
+- **Stability Monitoring**: Energy-based stability checks
+- **Adaptive Timestep**: Automatic step size control
 
 ### 🐍 Python Library
 ```python
 import simlab
 
-# Simple usage
-result = simlab.run_simulation()
+# Simple usage with configuration file
+result = simlab.run_simulation(config_path="config.json")
 print(f"Flight time: {result['summary']['flight_time']:.2f} s")
 
 # Advanced usage with configuration
@@ -43,7 +53,7 @@ result = simlab.run_simulation(
     output_dir="./results"
 )
 
-# Batch simulations
+# Batch simulations with parameter sweep
 results = simlab.batch_simulation(
     config_path="config.json",
     parameters=[
@@ -58,14 +68,17 @@ comparison = simlab.compare_results(
     "./result2"
 )
 
-# Access results
+# Access detailed results
 summary = result['summary']
 data = result['data']
 config = result['config']
+detailed_stats = result.get('detailed_stats', {})
 
 print(f"Flight time: {summary['flight_time']:.3f} seconds")
 print(f"Max height: {summary['max_height']:.2f} meters")
 print(f"Horizontal range: {summary['horizontal_range']:.2f} meters")
+print(f"Max Reynolds number: {detailed_stats.get('max_reynolds', 0):.2e}")
+print(f"Energy conserved: {detailed_stats.get('energy_conserved', True)}")
 
 # Save outputs
 output_files = result['output_files']
@@ -75,7 +88,7 @@ print(f"HTML report: {output_files['html']}")
 
 ### 🖥️ Command Line Interface
 ```bash
-# Basic usage
+# Basic usage (configuration file required)
 $ simlab run --config config.json
 $ simlab run --config config.yaml
 
@@ -89,6 +102,10 @@ $ simlab list
 $ simlab info drop
 $ simlab version
 $ simlab init my_project --scenario drop
+
+# Enhanced output options
+$ simlab run --config config.json --quiet          # Minimal output
+$ simlab run --config config.json --verbose        # Detailed output
 ```
 
 ## 📦 Installation
@@ -167,7 +184,7 @@ Create a `config.json` file:
 ## 📋 CLI Reference
 
 ### `simlab run`
-Run a simulation with specified configuration.
+Run a ball drop simulation with specified configuration.
 
 ```bash
 simlab run --config CONFIG [OPTIONS]
@@ -181,7 +198,7 @@ simlab run --config CONFIG [OPTIONS]
 - `--quiet, -q`: Minimal output
 - `--verbose, -v`: Verbose output
 
-**Note:** Individual parameters (height, mass, radius, spin) are no longer supported - use configuration files instead.
+**Note:** Configuration file is required. Individual parameters (height, mass, radius, spin) are no longer supported - use configuration files instead.
 
 ### `simlab batch`
 Run batch simulations with parameter sweep.
