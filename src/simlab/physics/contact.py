@@ -74,6 +74,314 @@ def calculate_coefficient_of_restitution(
     return e
 
 
+def calculate_friction_forces_advanced(
+    normal_force: float,
+    relative_velocity: np.ndarray,
+    angular_velocity: np.ndarray,
+    radius: float,
+    config: Dict[str, Any]
+) -> np.ndarray:
+    """
+    Calculate advanced friction forces with comprehensive physics modeling.
+    
+    Args:
+        normal_force (float): Normal contact force (N)
+        relative_velocity (np.ndarray): Relative velocity at contact point
+        angular_velocity (np.ndarray): Angular velocity vector
+        radius (float): Object radius (m)
+        config (dict): Physics configuration
+        
+    Returns:
+        np.ndarray: Total friction force vector
+    """
+    # Extract friction configuration
+    friction_config = config.get('friction', {})
+    model_type = friction_config.get('model', 'advanced')
+    
+    if model_type == 'simple':
+        return calculate_friction_forces(
+            normal_force, relative_velocity,
+            friction_config.get('static_friction', 0.5),
+            friction_config.get('kinetic_friction', 0.3),
+            friction_config.get('rolling_friction', 0.02)
+        )
+    
+    # Advanced friction model
+    v_tangent = np.linalg.norm(relative_velocity)
+    omega_mag = np.linalg.norm(angular_velocity)
+    
+    # Calculate different friction components
+    static_friction_force = calculate_static_friction(
+        normal_force, relative_velocity, angular_velocity, config
+    )
+    
+    kinetic_friction_force = calculate_kinetic_friction(
+        normal_force, relative_velocity, config
+    )
+    
+    rolling_friction_force = calculate_rolling_friction_advanced(
+        normal_force, relative_velocity, angular_velocity, radius, config
+    )
+    
+    # Combine friction forces based on motion state
+    if v_tangent < 1e-6 and omega_mag < 1e-6:
+        # Pure static friction (stiction)
+        return static_friction_force
+    elif v_tangent < 1e-3:
+        # Mixed static/rolling friction
+        return static_friction_force + rolling_friction_force
+    else:
+        # Dynamic friction with rolling effects
+        return kinetic_friction_force + rolling_friction_force
+
+
+def calculate_static_friction(
+    normal_force: float,
+    relative_velocity: np.ndarray,
+    angular_velocity: np.ndarray,
+    config: Dict[str, Any]
+) -> np.ndarray:
+    """
+    Calculate static friction (stiction) forces.
+    
+    Args:
+        normal_force (float): Normal force (N)
+        relative_velocity (np.ndarray): Relative velocity
+        angular_velocity (np.ndarray): Angular velocity
+        config (dict): Physics configuration
+        
+    Returns:
+        np.ndarray: Static friction force vector
+    """
+    friction_config = config.get('friction', {})
+    
+    # Base static friction coefficient
+    mu_static = friction_config.get('static_friction', 0.5)
+    
+    # Surface condition effects
+    surface_type = friction_config.get('surface_type', 'default')
+    surface_factor = get_surface_factor(surface_type, config)
+    
+    # Temperature effects
+    temperature = config.get('environment', {}).get('temperature', 293.15)
+    temp_factor = calculate_temperature_factor(temperature, config)
+    
+    # Pressure effects (Stribeck effect at low speeds)
+    effective_mu = mu_static * surface_factor * temp_factor
+    
+    # Maximum static friction force
+    max_static_force = effective_mu * normal_force
+    
+    # For static friction, we need to know the applied force to determine
+    # the actual friction force (up to the maximum). For now, we'll return
+    # the maximum possible static friction in the direction opposite to
+    # any potential motion.
+    
+    # Determine direction based on angular velocity (rolling tendency)
+    if np.linalg.norm(angular_velocity) > 1e-6:
+        # Rolling direction
+        rolling_direction = np.cross(angular_velocity, np.array([0, 0, 1]))
+        if np.linalg.norm(rolling_direction) > 1e-6:
+            friction_direction = -rolling_direction / np.linalg.norm(rolling_direction)
+        else:
+            friction_direction = np.array([1, 0, 0])  # Default direction
+    else:
+        # Default static friction direction
+        friction_direction = np.array([1, 0, 0])
+    
+    return max_static_force * friction_direction
+
+
+def calculate_kinetic_friction(
+    normal_force: float,
+    relative_velocity: np.ndarray,
+    config: Dict[str, Any]
+) -> np.ndarray:
+    """
+    Calculate kinetic (dynamic) friction forces.
+    
+    Args:
+        normal_force (float): Normal force (N)
+        relative_velocity (np.ndarray): Relative velocity
+        config (dict): Physics configuration
+        
+    Returns:
+        np.ndarray: Kinetic friction force vector
+    """
+    friction_config = config.get('friction', {})
+    
+    # Base kinetic friction coefficient
+    mu_kinetic = friction_config.get('kinetic_friction', 0.3)
+    
+    # Velocity-dependent friction (Stribeck effect)
+    v_tangent = np.linalg.norm(relative_velocity)
+    velocity_factor = calculate_velocity_factor(v_tangent, config)
+    
+    # Surface and temperature effects
+    surface_type = friction_config.get('surface_type', 'default')
+    surface_factor = get_surface_factor(surface_type, config)
+    temperature = config.get('environment', {}).get('temperature', 293.15)
+    temp_factor = calculate_temperature_factor(temperature, config)
+    
+    # Effective kinetic friction coefficient
+    effective_mu = mu_kinetic * velocity_factor * surface_factor * temp_factor
+    
+    # Friction force magnitude
+    friction_magnitude = effective_mu * normal_force
+    
+    # Direction opposite to relative velocity
+    if v_tangent > 1e-6:
+        friction_direction = -relative_velocity / v_tangent
+    else:
+        friction_direction = np.array([1, 0, 0])  # Default direction
+    
+    return friction_magnitude * friction_direction
+
+
+def calculate_rolling_friction_advanced(
+    normal_force: float,
+    relative_velocity: np.ndarray,
+    angular_velocity: np.ndarray,
+    radius: float,
+    config: Dict[str, Any]
+) -> np.ndarray:
+    """
+    Calculate advanced rolling friction with multiple effects.
+    
+    Args:
+        normal_force (float): Normal force (N)
+        relative_velocity (np.ndarray): Relative velocity
+        angular_velocity (np.ndarray): Angular velocity
+        radius (float): Object radius (m)
+        config (dict): Physics configuration
+        
+    Returns:
+        np.ndarray: Rolling friction force vector
+    """
+    friction_config = config.get('friction', {})
+    
+    # Base rolling friction coefficient
+    mu_rolling = friction_config.get('rolling_friction', 0.02)
+    
+    # Rolling resistance force magnitude
+    rolling_force_mag = mu_rolling * normal_force
+    
+    # Velocity-dependent rolling resistance
+    v_tangent = np.linalg.norm(relative_velocity)
+    omega_mag = np.linalg.norm(angular_velocity)
+    
+    if omega_mag > 1e-6:
+        # Pure rolling - friction opposes rolling direction
+        rolling_direction = np.cross(angular_velocity, np.array([0, 0, 1]))
+        if np.linalg.norm(rolling_direction) > 1e-6:
+            friction_direction = -rolling_direction / np.linalg.norm(rolling_direction)
+        else:
+            friction_direction = np.array([1, 0, 0])
+    elif v_tangent > 1e-6:
+        # Sliding - friction opposes sliding direction
+        friction_direction = -relative_velocity / v_tangent
+    else:
+        # Stationary
+        return np.zeros(3)
+    
+    return rolling_force_mag * friction_direction
+
+
+def get_surface_factor(surface_type: str, config: Dict[str, Any]) -> float:
+    """
+    Get surface-dependent friction factor.
+    
+    Args:
+        surface_type (str): Type of surface
+        config (dict): Physics configuration
+        
+    Returns:
+        float: Surface factor multiplier
+    """
+    # Base surface factors
+    surface_factors = {
+        'default': 1.0,
+        'ice': 0.1,
+        'wet_ice': 0.05,
+        'concrete': 1.2,
+        'asphalt': 1.1,
+        'grass': 0.8,
+        'sand': 0.6,
+        'rubber': 1.5,
+        'metal': 0.9,
+        'wood': 1.0
+    }
+    
+    base_factor = surface_factors.get(surface_type, 1.0)
+    
+    # Wetness effects
+    wetness = config.get('environment', {}).get('wetness', 0.0)
+    wetness_factor = 1.0 - 0.5 * wetness  # Wetness reduces friction
+    
+    # Roughness effects
+    roughness = config.get('environment', {}).get('surface_roughness', 0.0)
+    roughness_factor = 1.0 + 0.2 * roughness  # Roughness increases friction
+    
+    return base_factor * wetness_factor * roughness_factor
+
+
+def calculate_temperature_factor(temperature: float, config: Dict[str, Any]) -> float:
+    """
+    Calculate temperature-dependent friction factor.
+    
+    Args:
+        temperature (float): Temperature in Kelvin
+        config (dict): Physics configuration
+        
+    Returns:
+        float: Temperature factor multiplier
+    """
+    # Reference temperature (20°C)
+    T_ref = 293.15
+    
+    # Temperature coefficient (friction decreases with temperature for most materials)
+    temp_coeff = config.get('friction', {}).get('temperature_coefficient', -0.001)
+    
+    # Temperature difference
+    delta_T = temperature - T_ref
+    
+    # Temperature factor
+    temp_factor = 1.0 + temp_coeff * delta_T
+    
+    # Ensure physical bounds
+    return max(0.5, min(temp_factor, 1.5))
+
+
+def calculate_velocity_factor(velocity: float, config: Dict[str, Any]) -> float:
+    """
+    Calculate velocity-dependent friction factor (Stribeck effect).
+    
+    Args:
+        velocity (float): Relative velocity magnitude
+        config (dict): Physics configuration
+        
+    Returns:
+        float: Velocity factor multiplier
+    """
+    # Stribeck curve parameters
+    v_static = config.get('friction', {}).get('static_velocity_threshold', 0.01)
+    v_mixed = config.get('friction', {}).get('mixed_velocity_threshold', 0.1)
+    v_dynamic = config.get('friction', {}).get('dynamic_velocity_threshold', 1.0)
+    
+    if velocity < v_static:
+        # Static friction region
+        return 1.0
+    elif velocity < v_mixed:
+        # Mixed friction region (decreasing)
+        return 1.0 - 0.5 * (velocity - v_static) / (v_mixed - v_static)
+    elif velocity < v_dynamic:
+        # Transition to dynamic friction
+        return 0.5 + 0.3 * (velocity - v_mixed) / (v_dynamic - v_mixed)
+    else:
+        # Pure dynamic friction
+        return 0.8
+
+
 def calculate_friction_forces(
     normal_force: float,
     relative_velocity: np.ndarray,

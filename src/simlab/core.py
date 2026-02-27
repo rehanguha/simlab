@@ -5,7 +5,6 @@ Wraps the existing physics simulation code into a clean, modern API.
 """
 
 import json
-import yaml
 import os
 import sys
 from datetime import datetime
@@ -18,8 +17,18 @@ import numpy as np
 from .physics import (
     calculate_density, calculate_viscosity, calculate_speed_of_sound,
     calculate_reynolds_number, calculate_drag_coefficient,
-    calculate_magnus_force, calculate_gravity, calculate_wind_force,
-    calculate_terminal_velocity, calculate_spin_decay
+    calculate_magnus_force, calculate_spin_decay
+)
+from .physics.aerodynamics_enhanced import (
+    calculate_buoyancy_force,
+    calculate_effective_mass,
+    calculate_aerodynamic_forces,
+    calculate_spin_decay_advanced
+)
+from .physics.contact import (
+    calculate_hertzian_contact_force,
+    calculate_coefficient_of_restitution,
+    calculate_friction_forces_advanced
 )
 from .config.loader import ConfigLoader
 from .output.manager import OutputManager
@@ -253,11 +262,70 @@ def compare_results(
     
     return comparison
 
+def _apply_scenario_config(config: Dict[str, Any], scenario: str) -> Dict[str, Any]:
+    """Apply scenario-specific physics configurations."""
+    
+    # Create a copy to avoid modifying the original
+    config = config.copy()
+    
+    # Get simulation config
+    physics_config = config.get('simulation', {})
+    
+    # Scenario-specific configurations
+    if scenario == 'terminal_velocity':
+        # Terminal velocity test - disable buoyancy and virtual mass for pure gravity
+        physics_config['buoyancy'] = False
+        physics_config['use_virtual_mass'] = False
+        physics_config['use_multi_regime_cd'] = True  # Use advanced drag
+        physics_config['stop_speed_threshold'] = 0.01  # More precise stopping
+        physics_config['c_spin_decay'] = 0.0  # No spin decay for terminal velocity
+        physics_config['c_spin_aero'] = 0.0
+        
+    elif scenario == 'bounce':
+        # Bounce test - enable hertzian contact for realistic bouncing
+        physics_config['use_hertzian_contact'] = True
+        physics_config['stop_speed_threshold'] = 0.05
+        physics_config['stop_angular_threshold'] = 0.5
+        physics_config['stop_hold_time'] = 0.5
+        
+    elif scenario == 'spin':
+        # Spin test - enable advanced spin decay and Magnus effect
+        physics_config['use_multi_regime_cd'] = True
+        physics_config['c_spin_decay'] = 0.05
+        physics_config['c_spin_aero'] = 0.02
+        physics_config['buoyancy'] = False  # Focus on spin effects
+        
+    elif scenario == 'vacuum':
+        # Vacuum test - disable all aerodynamic effects
+        physics_config['buoyancy'] = False
+        physics_config['use_virtual_mass'] = False
+        physics_config['use_multi_regime_cd'] = False
+        physics_config['c_spin_decay'] = 0.0
+        physics_config['c_spin_aero'] = 0.0
+        
+    elif scenario == 'high_wind':
+        # High wind test - enable all advanced features
+        physics_config['buoyancy'] = True
+        physics_config['use_virtual_mass'] = True
+        physics_config['use_multi_regime_cd'] = True
+        physics_config['adaptive_timestep'] = True
+        physics_config['rtol'] = 1e-5
+        physics_config['atol'] = 1e-7
+        
+    # Update the config
+    config['simulation'] = physics_config
+    
+    return config
+
+
 def _run_simulation_core(config: Dict[str, Any], output_manager: OutputManager) -> Dict[str, Any]:
     """Core simulation execution."""
     
     # Extract configuration - scenario is optional now
     scenario = config.get('scenario', 'drop')
+    
+    # Apply scenario-specific physics configurations
+    config = _apply_scenario_config(config, scenario)
     
     # Get physics parameters from simulation section
     physics_config = config.get('simulation', {})
@@ -309,6 +377,11 @@ def _run_simulation_core(config: Dict[str, Any], output_manager: OutputManager) 
     # Data collection
     data = []
     
+    # Stopping condition tracking
+    stopped_time = 0.0
+    last_speed = float('inf')
+    last_angular_speed = float('inf')
+    
     # Simulation loop
     while t < max_time:
         # Calculate physics
@@ -318,6 +391,7 @@ def _run_simulation_core(config: Dict[str, Any], output_manager: OutputManager) 
         
         # Velocity magnitude
         speed = np.sqrt(vx**2 + vy**2 + vz**2)
+        angular_speed = np.sqrt(omega_x**2 + omega_y**2 + omega_z**2)
         
         # Initialize variables for zero speed case
         reynolds = 0.0
@@ -326,39 +400,119 @@ def _run_simulation_core(config: Dict[str, Any], output_manager: OutputManager) 
         drag_x = drag_y = drag_z = 0.0
         magnus = 0.0
         magnus_x = magnus_y = 0.0
+        buoyancy_force = 0.0
+        
+        # Initialize acceleration variables
+        ax, ay, az = 0.0, 0.0, 0.0
         
         # Calculate aerodynamic forces
         if speed < 1e-6:
             # Very low speed - minimal forces
             ax, ay, az = 0.0, -gravity, 0.0
         else:
-            # Aerodynamic forces
-            reynolds = calculate_reynolds_number(air_density, speed, radius, viscosity)
-            cd = calculate_drag_coefficient(reynolds, config)
+            # Enhanced aerodynamic calculations based on config flags
+            velocity_vector = np.array([vx, vy, vz])
+            angular_velocity_vector = np.array([omega_x, omega_y, omega_z])
             
-            # Drag force
-            drag_force = 0.5 * air_density * speed**2 * np.pi * radius**2 * cd
-            drag_x = -drag_force * vx / speed
-            drag_y = -drag_force * vy / speed
-            drag_z = -drag_force * vz / speed
-            
-            # Magnus force
-            magnus = calculate_magnus_force(air_density, speed, radius, omega_z, config)
-            magnus_x = magnus * vy / speed if speed > 0 else 0.0
-            magnus_y = -magnus * vx / speed if speed > 0 else 0.0
-            
-            # Gravity
-            gravity_force = mass * gravity
-            
-            # Total forces
-            fx = drag_x + magnus_x
-            fy = drag_y + magnus_y
-            fz = drag_z - gravity_force
-            
-            # Accelerations
-            ax = fx / mass
-            ay = fy / mass
-            az = fz / mass
+            # Use enhanced aerodynamics if enabled
+            if use_multi_regime_cd or buoyancy or use_virtual_mass:
+                # Calculate enhanced aerodynamic forces
+                force_vector, torque_vector, reynolds = calculate_aerodynamic_forces(
+                    velocity_vector, angular_velocity_vector, air_density, viscosity, 
+                    radius, mass, gravity, config=config
+                )
+                
+                fx, fy, fz = force_vector
+                tx, ty, tz = torque_vector
+                
+                # Apply virtual mass effect if enabled
+                if use_virtual_mass:
+                    effective_mass = calculate_effective_mass(mass, air_density, (4.0/3.0) * np.pi * radius**3)
+                    ax = fx / effective_mass
+                    ay = fy / effective_mass
+                    az = fz / effective_mass
+                else:
+                    ax = fx / mass
+                    ay = fy / mass
+                    az = fz / mass
+                
+                # Update angular velocity with enhanced decay
+                if use_virtual_mass:
+                    # Apply torque effects
+                    I = (2.0/5.0) * mass * radius**2  # Moment of inertia
+                    alpha_x = tx / I
+                    alpha_y = ty / I
+                    alpha_z = tz / I
+                    omega_x += alpha_x * time_step
+                    omega_y += alpha_y * time_step
+                    omega_z += alpha_z * time_step
+                
+                # Enhanced spin decay with configurable coefficients
+                c_spin_decay = physics_config.get('c_spin_decay', 0.05)
+                c_spin_aero = physics_config.get('c_spin_aero', 0.02)
+                
+                # Apply spin decay
+                angular_velocity_vector = calculate_spin_decay_advanced(
+                    angular_velocity_vector, velocity_vector, air_density, viscosity, 
+                    radius, time_step, config
+                )
+                
+                # Apply configurable spin decay coefficient
+                angular_velocity_vector *= (1.0 - c_spin_decay * time_step)
+                
+                # Apply aerodynamic spin effects
+                if np.linalg.norm(velocity_vector) > 1e-6:
+                    # Aerodynamic torque based on velocity and spin
+                    v_unit = velocity_vector / np.linalg.norm(velocity_vector)
+                    spin_axis = angular_velocity_vector / (np.linalg.norm(angular_velocity_vector) + 1e-10)
+                    
+                    # Cross product gives torque direction
+                    torque_direction = np.cross(v_unit, spin_axis)
+                    torque_magnitude = c_spin_aero * air_density * np.linalg.norm(velocity_vector)**2 * radius**3
+                    
+                    # Apply aerodynamic torque
+                    angular_velocity_vector += torque_magnitude * torque_direction * time_step
+                
+                omega_x, omega_y, omega_z = angular_velocity_vector
+                
+            else:
+                # Standard aerodynamic forces
+                reynolds = calculate_reynolds_number(air_density, speed, radius, viscosity)
+                cd = calculate_drag_coefficient(reynolds, config)
+                
+                # Drag force
+                drag_force = 0.5 * air_density * speed**2 * np.pi * radius**2 * cd
+                drag_x = -drag_force * vx / speed
+                drag_y = -drag_force * vy / speed
+                drag_z = -drag_force * vz / speed
+                
+                # Magnus force
+                magnus = calculate_magnus_force(air_density, speed, radius, omega_z, config)
+                magnus_x = magnus * vy / speed if speed > 0 else 0.0
+                magnus_y = -magnus * vx / speed if speed > 0 else 0.0
+                
+                # Gravity
+                gravity_force = mass * gravity
+                
+                # Buoyancy force if enabled
+                if buoyancy:
+                    volume = (4.0/3.0) * np.pi * radius**3
+                    buoyancy_force = calculate_buoyancy_force(air_density, volume, gravity)
+                else:
+                    buoyancy_force = 0.0
+                
+                # Total forces
+                fx = drag_x + magnus_x
+                fy = drag_y + magnus_y
+                fz = drag_z - gravity_force + buoyancy_force
+                
+                # Accelerations
+                ax = fx / mass
+                ay = fy / mass
+                az = fz / mass
+                
+                # Standard spin decay
+                omega_z = calculate_spin_decay(omega_z, time_step, air_density, viscosity, radius, config)
         
         # Update velocities
         vx += ax * time_step
@@ -370,15 +524,42 @@ def _run_simulation_core(config: Dict[str, Any], output_manager: OutputManager) 
         y += vy * time_step
         z += vz * time_step
         
-        # Update spin (decay)
-        omega_z = calculate_spin_decay(omega_z, time_step, air_density, viscosity, radius, config)
-        
-        # Ground collision
+        # Ground collision with enhanced contact physics
         if z <= 0:
             z = 0
-            vz = -vz * 0.8  # Elasticity
-            if abs(vz) < 0.1:  # Stop bouncing
+            if use_hertzian_contact:
+                # Enhanced contact model with advanced friction
+                penetration = -z
+                contact_force = calculate_hertzian_contact_force(penetration, radius, mass, config)
+                normal_velocity = abs(vz)
+                restitution = calculate_coefficient_of_restitution(normal_velocity, 0.7, 0.02, 0.0, 0.0)
+                
+                # Calculate advanced friction forces
+                relative_velocity = np.array([vx, vy, 0.0])  # Horizontal velocity at contact
+                angular_velocity = np.array([omega_x, omega_y, omega_z])
+                
+                friction_force = calculate_friction_forces_advanced(
+                    contact_force, relative_velocity, angular_velocity, radius, config
+                )
+                
+                # Apply restitution and friction
+                vz = -vz * restitution
+                vx += friction_force[0] * time_step / mass
+                vy += friction_force[1] * time_step / mass
+            else:
+                # Standard contact model
+                vz = -vz * 0.8  # Elasticity
+                if abs(vz) < 0.1:  # Stop bouncing
+                    break
+        
+        # Check stopping conditions
+        if speed < stop_speed_threshold and angular_speed < stop_angular_threshold:
+            if t - stopped_time > stop_hold_time:
                 break
+            elif stopped_time == 0.0:
+                stopped_time = t
+        else:
+            stopped_time = 0.0
         
         # Store data
         data.append({
@@ -390,12 +571,27 @@ def _run_simulation_core(config: Dict[str, Any], output_manager: OutputManager) 
             'vy': vy,
             'vz': vz,
             'speed': speed,
+            'omega_x': omega_x,
+            'omega_y': omega_y,
             'omega_z': omega_z,
             'air_density': air_density,
             'reynolds': reynolds,
             'cd': cd,
-            'mach': speed / speed_of_sound if speed_of_sound > 0 else 0.0
+            'mach': speed / speed_of_sound if speed_of_sound > 0 else 0.0,
+            'buoyancy_force': buoyancy_force,
+            'effective_mass': calculate_effective_mass(mass, air_density, (4.0/3.0) * np.pi * radius**3) if use_virtual_mass else mass
         })
+        
+        # Adaptive timestep control with proper error control
+        if adaptive_timestep:
+            # Calculate error estimate using both relative and absolute tolerances
+            acceleration = np.sqrt(ax**2 + ay**2 + az**2)
+            if acceleration > 0:
+                # Richardson extrapolation style error estimation
+                # Use both rtol (relative) and atol (absolute) for error control
+                error_estimate = max(atol, rtol * acceleration)
+                suggested_dt = np.sqrt(2 * error_estimate / acceleration)
+                time_step = max(min_dt, min(max_dt, suggested_dt))
         
         t += time_step
     
