@@ -121,67 +121,54 @@ def calculate_reynolds_number(
 
 def calculate_drag_coefficient(reynolds: float, config: dict = None) -> float:
     """
-    Calculate drag coefficient based on Reynolds number.
+    Calculate drag coefficient based on Reynolds number with smooth transitions.
+    
+    This corrected implementation uses smooth transition functions to avoid
+    discontinuities between flow regimes.
     
     Args:
         reynolds (float): Reynolds number
+        config (dict): Configuration parameters
         
     Returns:
         float: Drag coefficient
     """
-    # Get constants from config or use defaults
-    if config:
-        constants = config.get('constants', {})
-        aerodynamics = constants.get('aerodynamics', {})
-        stokes_coeff = aerodynamics.get('stokes_coefficient', 24.0)
-        intermediate_coeff = aerodynamics.get('intermediate_coefficient', 4.0)
-        turbulent_cd = aerodynamics.get('turbulent_cd', 0.47)
-    else:
-        stokes_coeff = 24.0
-        intermediate_coeff = 4.0
-        turbulent_cd = 0.47
+    # Import corrections module for smooth drag coefficient
+    from .corrections import calculate_smooth_drag_coefficient
     
-    if reynolds < 1:
-        # Stokes flow
-        return stokes_coeff / reynolds
-    elif reynolds < 1000:
-        # Intermediate flow
-        return stokes_coeff / reynolds + intermediate_coeff / np.sqrt(reynolds) + 0.4
-    else:
-        # Turbulent flow
-        return turbulent_cd
+    # Get configuration parameters
+    mach = config.get('mach', 0.0) if config else 0.0
+    surface_roughness = config.get('surface_roughness', 0.0) if config else 0.0
+    
+    return calculate_smooth_drag_coefficient(reynolds, mach, surface_roughness, config)
 
 def calculate_magnus_force(
     density: float,
-    velocity: float,
+    velocity: np.ndarray,
     radius: float,
-    angular_velocity: float,
+    angular_velocity: np.ndarray,
     config: dict = None
-) -> float:
+) -> np.ndarray:
     """
-    Calculate Magnus force magnitude.
+    Calculate Magnus force vector with proper formulation and Reynolds number effects.
+    
+    This corrected implementation uses the proper cross product formulation and
+    includes Reynolds number dependencies.
     
     Args:
         density (float): Air density in kg/m³
-        velocity (float): Velocity in m/s
+        velocity (np.ndarray): Velocity vector [vx, vy, vz] in m/s
         radius (float): Radius in m
-        angular_velocity (float): Angular velocity in rad/s
+        angular_velocity (np.ndarray): Angular velocity vector [wx, wy, wz] in rad/s
+        config (dict): Configuration parameters
         
     Returns:
-        float: Magnus force magnitude
+        np.ndarray: Magnus force vector
     """
-    # Get constants from config or use defaults
-    if config:
-        constants = config.get('constants', {})
-        aerodynamics = constants.get('aerodynamics', {})
-        magnus_coeff = aerodynamics.get('magnus_coefficient', 0.5)
-    else:
-        magnus_coeff = 0.5
+    # Import corrections module for vector Magnus force
+    from .corrections import calculate_vector_magnus_force
     
-    # Simplified Magnus force calculation
-    # F_magnus = coefficient * density * velocity * angular_velocity * radius^3
-    magnus_force = magnus_coeff * density * velocity * angular_velocity * (radius**3)
-    return magnus_force
+    return calculate_vector_magnus_force(velocity, angular_velocity, density, radius, config)
 
 def calculate_wind_force(
     density: float,

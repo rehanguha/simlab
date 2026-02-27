@@ -17,6 +17,9 @@ def calculate_hertzian_contact_force(
     """
     Calculate Hertzian contact force for sphere-surface collision.
     
+    This corrected implementation uses proper Hertzian contact theory with
+    accurate material property handling.
+    
     Args:
         penetration (float): Penetration depth (m)
         radius (float): Sphere radius (m)
@@ -26,18 +29,12 @@ def calculate_hertzian_contact_force(
     Returns:
         float: Contact force magnitude (N)
     """
-    if penetration <= 0:
-        return 0.0
+    # Import corrections module for advanced Hertzian contact
+    from .corrections import calculate_advanced_hertzian_contact
     
-    # Effective elastic modulus
-    E_eff = youngs_modulus / (1 - poisson_ratio**2)
-    
-    # Contact radius
-    a = np.sqrt(radius * penetration)
-    
-    # Hertzian contact force
-    # F = (4/3) * E_eff * a^3 / R
-    force = (4.0/3.0) * E_eff * (a**3) / radius
+    force, contact_radius = calculate_advanced_hertzian_contact(
+        penetration, radius, youngs_modulus, poisson_ratio
+    )
     
     return force
 

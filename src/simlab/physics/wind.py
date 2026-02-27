@@ -114,7 +114,10 @@ def calculate_atmospheric_properties(
     humidity: float = 0.5
 ) -> Tuple[float, float, float]:
     """
-    Calculate atmospheric properties using ISA model with humidity correction.
+    Calculate atmospheric properties using corrected ISA model.
+    
+    This corrected implementation uses proper ISA model equations with
+    accurate humidity corrections.
     
     Args:
         altitude (float): Altitude above sea level (m)
@@ -124,43 +127,10 @@ def calculate_atmospheric_properties(
     Returns:
         Tuple of (density, viscosity, speed_of_sound)
     """
-    # Standard ISA constants
-    T0 = 288.15  # Sea level temperature (K)
-    p0 = 101325  # Sea level pressure (Pa)
-    R_d = 287.058  # Gas constant for dry air (J/kg·K)
-    R_v = 461.495  # Gas constant for water vapor (J/kg·K)
-    L = 0.0065  # Temperature lapse rate (K/m)
-    g = 9.80665  # Gravitational acceleration (m/s²)
+    # Import corrections module for corrected atmospheric properties
+    from .corrections import calculate_corrected_atmospheric_properties
     
-    # Temperature at altitude (troposphere)
-    T = T0 - L * altitude
-    
-    # Pressure at altitude
-    p = p0 * (T / T0) ** (g / (R_d * L))
-    
-    # Saturation vapor pressure (Buck equation)
-    T_c = T - 273.15  # Celsius
-    e_s = 611.21 * np.exp((18.678 - T_c/234.5) * T_c / (257.14 + T_c))
-    
-    # Actual vapor pressure
-    e = e_s * humidity
-    
-    # Air density with humidity correction
-    rho_dry = p / (R_d * T)
-    rho_vapor = e / (R_v * T)
-    density = rho_dry + rho_vapor
-    
-    # Dynamic viscosity (Sutherland's law)
-    mu_ref = 1.716e-5
-    T_ref = 273.15
-    S = 110.4
-    viscosity = mu_ref * (T / T_ref) ** 1.5 * (T_ref + S) / (T + S)
-    
-    # Speed of sound
-    gamma = 1.4  # Ratio of specific heats
-    speed_of_sound = np.sqrt(gamma * R_d * T)
-    
-    return density, viscosity, speed_of_sound
+    return calculate_corrected_atmospheric_properties(altitude, temperature, humidity)
 
 
 def calculate_wind_profile(
