@@ -1,0 +1,52 @@
+{
+  "scenario": "drop",
+  "description": "No-wind bounce test - ball dropped from height bounces at same spot",
+  "ball": {
+    "mass": 0.5,
+    "radius": 0.1,
+    "spin_rps": 0.0
+  },
+  "position": {
+    "x0": 0.0,
+    "y0": 0.0,
+    "z0": 10.0
+  },
+  "wind": {
+    "humidity_pct": 0.0,
+    "ref_speed": 0.0,
+    "ref_height": 10.0,
+    "shear_alpha": 0.0,
+    "direction_deg": 0.0,
+    "gust_tau": 1.0,
+    "gust_sigma": 0.0
+  },
+  "simulation": {
+    "g": 9.81,
+    "dt": 0.001,
+    "t_max": 5.0,
+    "seed": 123,
+    "adaptive_timestep": false,
+    "buoyancy": false,
+    "use_virtual_mass": false,
+    "use_multi_regime_cd": false,
+    "use_hertzian_contact": true,
+    "stop_speed_threshold": 0.05,
+    "stop_angular_threshold": 0.5,
+    "stop_hold_time": 0.5,
+    "c_spin_decay": 0.0,
+    "c_spin_aero": 0.0
+  },
+  "output": {
+    "run_name": "no_wind_bounce_test",
+    "output_dir": "outputs/no_wind_bounce",
+    "csv_file": "no_wind_bounce_data.csv",
+    "plot_file": "no_wind_bounce_plot.png",
+    "html_file": "no_wind_bounce_report.html"
+  },
+  "test_expectations": {
+    "description": "Ball should bounce vertically with no horizontal movement",
+    "expected_horizontal_range": "0.0 meters (or very close to 0)",
+    "expected_bounce_count": "Multiple bounces with decreasing height",
+    "expected_behavior": "Simple harmonic-like motion in vertical direction only"
+  }
+}

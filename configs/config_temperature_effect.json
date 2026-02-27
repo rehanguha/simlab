@@ -1,0 +1,54 @@
+{
+  "scenario": "drop",
+  "description": "Temperature effect test - air density variations affect drag",
+  "ball": {
+    "mass": 0.5,
+    "radius": 0.1,
+    "spin_rps": 0.0
+  },
+  "position": {
+    "x0": 0.0,
+    "y0": 0.0,
+    "z0": 100.0
+  },
+  "wind": {
+    "humidity_pct": 40.0,
+    "ref_speed": 0.0,
+    "ref_height": 10.0,
+    "shear_alpha": 0.0,
+    "direction_deg": 0.0,
+    "gust_tau": 1.0,
+    "gust_sigma": 0.0
+  },
+  "simulation": {
+    "g": 9.81,
+    "dt": 0.005,
+    "t_max": 15.0,
+    "seed": 111,
+    "adaptive_timestep": false,
+    "buoyancy": true,
+    "use_virtual_mass": true,
+    "use_multi_regime_cd": true,
+    "use_hertzian_contact": false,
+    "stop_speed_threshold": 0.05,
+    "stop_angular_threshold": 0.5,
+    "stop_hold_time": 0.5,
+    "c_spin_decay": 0.0,
+    "c_spin_aero": 0.0,
+    "temperature": 300.0
+  },
+  "output": {
+    "run_name": "temperature_effect_test",
+    "output_dir": "outputs/temperature_effect",
+    "csv_file": "temperature_effect_data.csv",
+    "plot_file": "temperature_effect_plot.png",
+    "html_file": "temperature_effect_report.html"
+  },
+  "test_expectations": {
+    "description": "Different temperatures affect air density and thus drag",
+    "temperature": "300K (27°C) - warmer than standard",
+    "expected_effect": "Lower air density reduces drag, longer flight time",
+    "comparison": "Compare with standard temperature (288K) simulation",
+    "air_density": "Should be lower than standard sea level density"
+  }
+}

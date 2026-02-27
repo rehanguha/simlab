@@ -1,0 +1,53 @@
+{
+  "scenario": "bounce",
+  "description": "Multi-bounce test - repeated collisions with energy loss",
+  "ball": {
+    "mass": 0.6,
+    "radius": 0.09,
+    "spin_rps": 2.0
+  },
+  "position": {
+    "x0": 0.0,
+    "y0": 0.0,
+    "z0": 5.0
+  },
+  "wind": {
+    "humidity_pct": 30.0,
+    "ref_speed": 0.0,
+    "ref_height": 10.0,
+    "shear_alpha": 0.0,
+    "direction_deg": 0.0,
+    "gust_tau": 1.0,
+    "gust_sigma": 0.0
+  },
+  "simulation": {
+    "g": 9.81,
+    "dt": 0.001,
+    "t_max": 10.0,
+    "seed": 987,
+    "adaptive_timestep": false,
+    "buoyancy": false,
+    "use_virtual_mass": false,
+    "use_multi_regime_cd": false,
+    "use_hertzian_contact": true,
+    "stop_speed_threshold": 0.01,
+    "stop_angular_threshold": 0.1,
+    "stop_hold_time": 1.0,
+    "c_spin_decay": 0.02,
+    "c_spin_aero": 0.01
+  },
+  "output": {
+    "run_name": "multi_bounce_test",
+    "output_dir": "outputs/multi_bounce",
+    "csv_file": "multi_bounce_data.csv",
+    "plot_file": "multi_bounce_plot.png",
+    "html_file": "multi_bounce_report.html"
+  },
+  "test_expectations": {
+    "description": "Ball should bounce multiple times with decreasing height",
+    "expected_bounce_count": "5-10 bounces before stopping",
+    "expected_energy_loss": "Each bounce loses ~30% energy",
+    "expected_behavior": "Exponential decay in bounce height",
+    "spin_effect": "Spin should affect bounce angle and roll"
+  }
+}

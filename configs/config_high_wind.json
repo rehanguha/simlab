@@ -1,0 +1,53 @@
+{
+  "scenario": "drop",
+  "description": "High wind test - strong crosswind affects ball trajectory",
+  "ball": {
+    "mass": 0.4,
+    "radius": 0.12,
+    "spin_rps": 0.0
+  },
+  "position": {
+    "x0": 0.0,
+    "y0": 0.0,
+    "z0": 20.0
+  },
+  "wind": {
+    "humidity_pct": 50.0,
+    "ref_speed": 15.0,
+    "ref_height": 10.0,
+    "shear_alpha": 0.14,
+    "direction_deg": 90.0,
+    "gust_tau": 2.0,
+    "gust_sigma": 2.0
+  },
+  "simulation": {
+    "g": 9.81,
+    "dt": 0.002,
+    "t_max": 8.0,
+    "seed": 789,
+    "adaptive_timestep": false,
+    "buoyancy": true,
+    "use_virtual_mass": true,
+    "use_multi_regime_cd": true,
+    "use_hertzian_contact": true,
+    "stop_speed_threshold": 0.05,
+    "stop_angular_threshold": 0.5,
+    "stop_hold_time": 0.5,
+    "c_spin_decay": 0.05,
+    "c_spin_aero": 0.02
+  },
+  "output": {
+    "run_name": "high_wind_test",
+    "output_dir": "outputs/high_wind",
+    "csv_file": "high_wind_data.csv",
+    "plot_file": "high_wind_plot.png",
+    "html_file": "high_wind_report.html"
+  },
+  "test_expectations": {
+    "description": "Ball should be significantly displaced horizontally by wind",
+    "expected_horizontal_range": "10-20 meters (depending on wind effects)",
+    "expected_flight_time": "Slightly longer than vacuum due to lift/drag",
+    "expected_behavior": "Curved trajectory with horizontal drift",
+    "wind_direction": "90 degrees (positive x-direction)"
+  }
+}

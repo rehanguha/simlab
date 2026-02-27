@@ -1,0 +1,25 @@
+{
+  "ball": {
+    "mass": 0.5,
+    "radius": 0.05,
+    "initial_velocity": [10.0, 0.0, 20.0],
+    "initial_position": [0.0, 0.0, 0.0]
+  },
+  "surface": {
+    "elasticity_base": 0.70,
+    "elasticity_angle": 0.05,
+    "friction_coefficient": 0.1,
+    "spin_friction": 0.05
+  },
+  "wind": {
+    "ref_speed": 2.0,
+    "ref_height": 10.0,
+    "turbulence_intensity": 0.1,
+    "turbulence_scale": 50.0
+  },
+  "simulation": {
+    "time_step": 0.01,
+    "max_steps": 10000,
+    "gravity": [0.0, 0.0, -9.81]
+  }
+}
