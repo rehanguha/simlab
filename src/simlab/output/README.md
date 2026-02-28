@@ -1,6 +1,6 @@
 # Output Module
 
-This directory contains the output management system for SimLab, responsible for generating, organizing, and saving simulation results in various formats.
+This directory contains the output management system for physimlab, responsible for generating, organizing, and saving simulation results in various formats.
 
 ## Overview
 
@@ -104,7 +104,7 @@ outputs/
 ### Custom Output Directory
 You can specify a custom output directory:
 ```python
-result = simlab.run_simulation(
+result = physimlab.run_simulation(
     config_path="config.json",
     output_dir="./my_results"
 )
@@ -127,10 +127,10 @@ my_results/
 
 ### Basic Output Generation
 ```python
-import simlab
+import physimlab
 
 # Run simulation with default output
-result = simlab.run_simulation(config_path="config.json")
+result = physimlab.run_simulation(config_path="config.json")
 
 # Access output files
 output_files = result['output_files']
@@ -142,13 +142,13 @@ print(f"JSON summary: {output_files['json']}")
 ### Custom Output Configuration
 ```python
 # Specify custom output directory
-result = simlab.run_simulation(
+result = physimlab.run_simulation(
     config_path="config.json",
     output_dir="./custom_results"
 )
 
 # Generate specific output formats
-result = simlab.run_simulation(
+result = physimlab.run_simulation(
     config_path="config.json",
     output_formats=["csv", "json", "html"]
 )
@@ -174,7 +174,7 @@ The output manager handles file operations and organization:
 
 ### Key Functions
 ```python
-from simlab.output.manager import save_simulation_results
+from physimlab.output.manager import save_simulation_results
 
 # Save all output formats
 output_files = save_simulation_results(
@@ -205,7 +205,7 @@ The result object provides advanced plotting and analysis capabilities:
 
 ### Plotting Methods
 ```python
-from simlab.output.result import SimulationResult
+from physimlab.output.result import SimulationResult
 
 # Create result object
 result = SimulationResult(data, summary, config)

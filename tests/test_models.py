@@ -1,5 +1,5 @@
 """
-Comprehensive tests for simlab.core module configuration.
+Comprehensive tests for physimlab.core module configuration.
 Tests configuration validation and structure.
 """
 
@@ -10,7 +10,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from simlab.core import run_simulation
+from physimlab.core import run_simulation
 
 
 # =========================

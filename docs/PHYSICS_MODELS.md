@@ -1,6 +1,6 @@
 # Physics Models Documentation
 
-This document provides comprehensive documentation for all physics models implemented in SimLab, including detailed explanations of the mathematical formulations, parameters, and usage.
+This document provides comprehensive documentation for all physics models implemented in physimlab, including detailed explanations of the mathematical formulations, parameters, and usage.
 
 ## Table of Contents
 
@@ -36,7 +36,7 @@ Calculates drag coefficient based on Reynolds number using piecewise correlation
 
 **Example:**
 ```python
-from simlab.physics import calculate_drag_coefficient
+from physimlab.physics import calculate_drag_coefficient
 
 # Calculate drag coefficient for Re = 100,000
 cd = calculate_drag_coefficient(1e5)
@@ -58,7 +58,7 @@ Calculates Magnus force magnitude for spinning objects.
 
 **Example:**
 ```python
-from simlab.physics import calculate_magnus_force
+from physimlab.physics import calculate_magnus_force
 
 # Calculate Magnus force
 magnus_force = calculate_magnus_force(
@@ -83,7 +83,7 @@ Advanced drag coefficient calculation with compressibility and roughness correct
 
 **Example:**
 ```python
-from simlab.physics import calculate_multi_regime_drag_coefficient
+from physimlab.physics import calculate_multi_regime_drag_coefficient
 
 # Calculate with compressibility effects
 cd = calculate_multi_regime_drag_coefficient(
@@ -150,7 +150,7 @@ Calculates gravitational acceleration at a given altitude.
 
 **Example:**
 ```python
-from simlab.physics import calculate_gravity
+from physimlab.physics import calculate_gravity
 
 # Calculate gravity at 1000m altitude
 g = calculate_gravity(altitude=1000.0)
@@ -172,7 +172,7 @@ Calculates terminal velocity of a falling object.
 
 **Example:**
 ```python
-from simlab.physics import calculate_terminal_velocity
+from physimlab.physics import calculate_terminal_velocity
 
 # Calculate terminal velocity for a 0.5kg, 0.1m radius sphere
 v_t = calculate_terminal_velocity(mass=0.5, radius=0.1)
@@ -218,7 +218,7 @@ Where:
 
 **Example:**
 ```python
-from simlab.physics import calculate_hertzian_contact_force
+from physimlab.physics import calculate_hertzian_contact_force
 
 # Calculate contact force for 1mm penetration
 force = calculate_hertzian_contact_force(penetration=0.001, radius=0.1)
@@ -300,7 +300,7 @@ Calculates wind velocity at height z using power law.
 
 **Example:**
 ```python
-from simlab.physics import calculate_wind_velocity
+from physimlab.physics import calculate_wind_velocity
 
 # Calculate wind at 20m height
 wind = calculate_wind_velocity(z=20.0, ref_speed=5.0, ref_height=10.0)
@@ -364,7 +364,7 @@ Adaptive Runge-Kutta 4(5) method using Dormand-Prince coefficients.
 
 **Example:**
 ```python
-from simlab.physics import AdaptiveRK45
+from physimlab.physics import AdaptiveRK45
 
 # Create integrator
 integrator = AdaptiveRK45(rtol=1e-6, atol=1e-8)
@@ -534,7 +534,7 @@ Advanced aerodynamic model with all effects integrated.
 
 **Example:**
 ```python
-from simlab.physics import AerodynamicModel
+from physimlab.physics import AerodynamicModel
 
 # Create model
 config = {
@@ -570,7 +570,7 @@ Class for managing complex wind fields with multiple components.
 
 **Example:**
 ```python
-from simlab.physics import WindField
+from physimlab.physics import WindField
 
 # Create wind field
 config = {
@@ -660,7 +660,7 @@ nu_default = 0.5   # - default Poisson's ratio
 ### Complete Physics Simulation
 ```python
 import numpy as np
-from simlab.physics import (
+from physimlab.physics import (
     calculate_aerodynamic_forces,
     calculate_hertzian_contact_force,
     calculate_wind_velocity,
@@ -750,4 +750,4 @@ config = {
 result = run_simulation(config_path=None, **config)
 ```
 
-This comprehensive documentation provides detailed information about all physics models, their parameters, and usage examples. The physics implementation in SimLab is designed to be both accurate and flexible, supporting a wide range of simulation scenarios from simple ball drops to complex aerodynamic analyses.
+This comprehensive documentation provides detailed information about all physics models, their parameters, and usage examples. The physics implementation in physimlab is designed to be both accurate and flexible, supporting a wide range of simulation scenarios from simple ball drops to complex aerodynamic analyses.

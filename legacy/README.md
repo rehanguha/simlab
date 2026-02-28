@@ -4,7 +4,7 @@ This directory contains legacy code and previous implementations that are no lon
 
 ## Overview
 
-The legacy directory preserves older versions of SimLab components, experimental implementations, and code that has been superseded by newer, more efficient implementations. This code is provided for reference, comparison, and potential future use.
+The legacy directory preserves older versions of physimlab components, experimental implementations, and code that has been superseded by newer, more efficient implementations. This code is provided for reference, comparison, and potential future use.
 
 ## Legacy Files
 
@@ -95,8 +95,8 @@ def simulate_ball_drop(mass, radius, height):
 **Current Approach:**
 ```python
 # Modular physics system
-from simlab.physics import calculate_density, calculate_drag_coefficient
-from simlab.physics.numerical import AdaptiveRK45
+from physimlab.physics import calculate_density, calculate_drag_coefficient
+from physimlab.physics.numerical import AdaptiveRK45
 ```
 
 #### Configuration System
@@ -109,7 +109,7 @@ config = json.load(open('config.json'))
 **Current Approach:**
 ```python
 # Enhanced configuration system
-from simlab.config import load_config, validate_config
+from physimlab.config import load_config, validate_config
 config = load_config('config.json', validate=True)
 ```
 
@@ -125,7 +125,7 @@ def generate_report(data):
 **Current Approach:**
 ```python
 # Comprehensive output system
-from simlab.output import save_simulation_results
+from physimlab.output import save_simulation_results
 output_files = save_simulation_results(data, summary, config, formats=['csv', 'json', 'html'])
 ```
 
@@ -165,7 +165,7 @@ from legacy.config_loader import load_legacy_config
 - **Reference Only**: Use only for reference and comparison
 
 ### Recommendations
-1. **Use Current System**: Always prefer the current SimLab implementation
+1. **Use Current System**: Always prefer the current physimlab implementation
 2. **Reference Only**: Use legacy code only for understanding or comparison
 3. **No Production Use**: Do not use legacy code in production systems
 4. **Documentation**: Refer to current documentation for up-to-date information
@@ -241,4 +241,4 @@ from legacy.config_loader import load_legacy_config
 
 ## Conclusion
 
-The legacy directory preserves the history and evolution of SimLab. While this code is no longer actively maintained, it provides valuable insights into the development process and can serve as a reference for understanding the current system's design decisions and improvements.
+The legacy directory preserves the history and evolution of physimlab. While this code is no longer actively maintained, it provides valuable insights into the development process and can serve as a reference for understanding the current system's design decisions and improvements.

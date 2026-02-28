@@ -12,7 +12,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from simlab.physics.corrections import (
+from physimlab.physics.corrections import (
     calculate_smooth_drag_coefficient,
     calculate_vector_magnus_force,
     calculate_frequency_dependent_virtual_mass,
@@ -21,7 +21,7 @@ from simlab.physics.corrections import (
     validate_energy_conservation,
     check_numerical_stability
 )
-from simlab.physics.validation import (
+from physimlab.physics.validation import (
     PhysicsValidator,
     MathematicalAccuracyValidator,
     create_validation_report
@@ -411,9 +411,9 @@ class TestIntegrationAccuracy:
     def test_corrected_physics_integration(self):
         """Test that corrected physics functions integrate properly."""
         # Test that all corrected functions can be called without errors
-        from simlab.physics.aerodynamics import calculate_drag_coefficient
-        from simlab.physics.wind import calculate_atmospheric_properties
-        from simlab.physics.contact import calculate_hertzian_contact_force
+        from physimlab.physics.aerodynamics import calculate_drag_coefficient
+        from physimlab.physics.wind import calculate_atmospheric_properties
+        from physimlab.physics.contact import calculate_hertzian_contact_force
         
         # Test drag coefficient
         cd = calculate_drag_coefficient(1e5, config={'mach': 0.0, 'surface_roughness': 0.0})

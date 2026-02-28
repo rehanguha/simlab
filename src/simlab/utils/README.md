@@ -1,6 +1,6 @@
 # Utilities Module
 
-This directory contains utility functions and constants used throughout the SimLab physics simulation library.
+This directory contains utility functions and constants used throughout the physimlab physics simulation library.
 
 ## Overview
 
@@ -141,7 +141,7 @@ def get_default_config():
 
 ### Using Physical Constants
 ```python
-from simlab.utils.constants import (
+from physimlab.utils.constants import (
     STANDARD_GRAVITY, 
     DENSITY_AIR,
     PI
@@ -158,7 +158,7 @@ drag_force = 0.5 * DENSITY_AIR * velocity**2 * cd * area
 
 ### Using Helper Functions
 ```python
-from simlab.utils.helpers import (
+from physimlab.utils.helpers import (
     format_time,
     format_velocity,
     normalize_vector,
@@ -179,7 +179,7 @@ smoothed_data = smooth_data(raw_data, window_size=10)
 
 ### Configuration Utilities
 ```python
-from simlab.utils.helpers import merge_dicts, validate_range
+from physimlab.utils.helpers import merge_dicts, validate_range
 
 # Merge user config with defaults
 default_config = get_default_config()
@@ -196,7 +196,7 @@ validate_range(final_config['simulation']['time_step'], 1e-6, 0.1, 'time_step')
 ### Physics Module Integration
 ```python
 # constants.py used in physics calculations
-from simlab.utils.constants import STANDARD_GRAVITY, DENSITY_AIR
+from physimlab.utils.constants import STANDARD_GRAVITY, DENSITY_AIR
 
 def calculate_gravity(altitude):
     return STANDARD_GRAVITY * (EARTH_RADIUS / (EARTH_RADIUS + altitude))**2
@@ -208,7 +208,7 @@ def calculate_density(temperature, humidity):
 ### Output Module Integration
 ```python
 # helpers.py used in output formatting
-from simlab.utils.helpers import format_time, format_velocity, format_distance
+from physimlab.utils.helpers import format_time, format_velocity, format_distance
 
 def format_summary(summary):
     return {
@@ -222,7 +222,7 @@ def format_summary(summary):
 ### Configuration Module Integration
 ```python
 # helpers.py used in configuration validation
-from simlab.utils.helpers import validate_range, parse_boolean
+from physimlab.utils.helpers import validate_range, parse_boolean
 
 def validate_config(config):
     errors = []

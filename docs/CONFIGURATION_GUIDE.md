@@ -1,6 +1,6 @@
 # Configuration Guide
 
-This guide provides comprehensive information about configuring SimLab simulations, including all available parameters, their effects, and best practices for different simulation scenarios.
+This guide provides comprehensive information about configuring physimlab simulations, including all available parameters, their effects, and best practices for different simulation scenarios.
 
 ## Table of Contents
 
@@ -16,7 +16,7 @@ This guide provides comprehensive information about configuring SimLab simulatio
 
 ## Configuration File Structure
 
-SimLab uses JSON or YAML configuration files to define simulation parameters. The configuration file structure is hierarchical and organized by functional areas.
+physimlab uses JSON or YAML configuration files to define simulation parameters. The configuration file structure is hierarchical and organized by functional areas.
 
 ### Basic Structure
 ```json
@@ -678,4 +678,4 @@ Rotational dynamics analysis.
 - Verify parameter types and ranges
 - Use configuration validation tools
 
-This comprehensive configuration guide should help you create effective and accurate SimLab simulations for a wide variety of scenarios. Always test your configurations with simple cases before moving to complex simulations.
+This comprehensive configuration guide should help you create effective and accurate physimlab simulations for a wide variety of scenarios. Always test your configurations with simple cases before moving to complex simulations.

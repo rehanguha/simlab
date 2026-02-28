@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "simlab"
+name = "physimlab"
 version = "0.1.0"
 description = "A physics simulation library for modeling and analyzing physical systems"
 readme = "README.md"
@@ -40,18 +40,18 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/rehanguha/simlab"
-Repository = "https://github.com/rehanguha/simlab"
-Issues = "https://github.com/rehanguha/simlab/issues"
+Homepage = "https://github.com/rehanguha/physimlab"
+Repository = "https://github.com/rehanguha/physimlab"
+Issues = "https://github.com/rehanguha/physimlab/issues"
 
 [project.scripts]
-simlab = "simlab.cli:app"
+physimlab = "physimlab.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-simlab = ["py.typed"]
+physimlab = ["py.typed"]
 
 [tool.black]
 line-length = 88

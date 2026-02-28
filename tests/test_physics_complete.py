@@ -11,7 +11,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from simlab.physics import (
+from physimlab.physics import (
     # Basic physics
     calculate_density, calculate_viscosity, calculate_speed_of_sound,
     calculate_reynolds_number, calculate_drag_coefficient,

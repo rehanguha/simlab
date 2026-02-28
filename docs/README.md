@@ -1,10 +1,10 @@
 # Documentation
 
-This directory contains comprehensive documentation for the SimLab physics simulation library, including user guides, technical specifications, and reference materials.
+This directory contains comprehensive documentation for the physimlab physics simulation library, including user guides, technical specifications, and reference materials.
 
 ## Overview
 
-The documentation provides detailed information about SimLab's features, usage, configuration, and underlying physics models. It serves as a complete reference for users, developers, and contributors.
+The documentation provides detailed information about physimlab's features, usage, configuration, and underlying physics models. It serves as a complete reference for users, developers, and contributors.
 
 ## Documentation Structure
 
@@ -37,7 +37,7 @@ Comprehensive guide to creating and using configuration files:
 - Output configuration (formats, directories, file naming)
 
 #### Physics Models (`PHYSICS_MODELS.md`)
-Detailed description of all physics models implemented in SimLab:
+Detailed description of all physics models implemented in physimlab:
 
 - **Aerodynamics**: Drag, lift, Magnus effect, air properties
 - **Mechanics**: Gravity, terminal velocity, spin decay
@@ -54,7 +54,7 @@ Detailed description of all physics models implemented in SimLab:
 ### Technical Documentation
 
 #### Mathematical Derivations (`MATHEMATICAL_DERIVATIONS.md`)
-In-depth mathematical background for SimLab's physics calculations:
+In-depth mathematical background for physimlab's physics calculations:
 
 - **Fundamental Equations**: Newton's laws, fluid dynamics equations
 - **Derivation Processes**: Step-by-step derivations of key formulas
@@ -70,7 +70,7 @@ In-depth mathematical background for SimLab's physics calculations:
 - Numerical integration error analysis and stability criteria
 
 #### References (`REFERENCES.md`)
-Academic and technical references supporting SimLab's implementations:
+Academic and technical references supporting physimlab's implementations:
 
 - **Scientific Papers**: Peer-reviewed research supporting physics models
 - **Textbooks**: Standard references for physics and numerical methods
@@ -203,7 +203,7 @@ If you find errors or have suggestions for improving documentation:
 - **GitHub Repository**: Source code and issue tracking
 - **Wiki**: Additional user-contributed documentation
 - **Community Forums**: User discussions and support
-- **Academic Papers**: Research publications using SimLab
+- **Academic Papers**: Research publications using physimlab
 
 ## Dependencies
 

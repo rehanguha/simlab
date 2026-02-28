@@ -1,5 +1,5 @@
 """
-Comprehensive tests for simlab.output module.
+Comprehensive tests for physimlab.output module.
 Tests output generation, statistics calculation, and result formatting.
 """
 
@@ -11,7 +11,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from simlab.output import Result
+from physimlab.output import Result
 
 
 # =========================

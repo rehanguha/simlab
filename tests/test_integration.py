@@ -1,5 +1,5 @@
 """
-Integration tests for simlab.core module.
+Integration tests for physimlab.core module.
 Tests end-to-end workflows and cross-module interactions.
 """
 
@@ -11,9 +11,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from simlab.core import run_simulation
-from simlab.config.loader import ConfigLoader
-from simlab.output.manager import OutputManager
+from physimlab.core import run_simulation
+from physimlab.config.loader import ConfigLoader
+from physimlab.output.manager import OutputManager
 
 
 # =========================
@@ -47,7 +47,7 @@ class TestFullWorkflow:
         
         # Generate output files using OutputManager
         output_manager = OutputManager(output_dir=temp_output_dir)
-        from simlab.output.result import Result
+        from physimlab.output.result import Result
         
         result_obj = Result(
             data=result['data'],

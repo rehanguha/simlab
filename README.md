@@ -1,11 +1,11 @@
-# SimLab - Physics Simulation Laboratory
+# PhySimLab - Physics Simulation Laboratory
 
-[![PyPI version](https://badge.fury.io/py/simlab.svg)](https://badge.fury.io/py/simlab)
+[![PyPI version](https://badge.fury.io/py/physimlab.svg)](https://badge.fury.io/py/physimlab)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Python Version](https://img.shields.io/pypi/pyversions/simlab.svg)](https://pypi.org/project/simlab/)
-[![Downloads](https://pepy.tech/badge/simlab)](https://pepy.tech/project/simlab)
+[![Python Version](https://img.shields.io/pypi/pyversions/physimlab.svg)](https://pypi.org/project/physimlab/)
+[![Downloads](https://pepy.tech/badge/physimlab)](https://pepy.tech/project/physimlab)
 
-**SimLab** is a comprehensive physics simulation package for ball drop experiments with advanced aerodynamics, Magnus effect, and ground interaction physics.
+**physimlab** is a comprehensive physics simulation package for ball drop experiments with advanced aerodynamics, Magnus effect, and ground interaction physics.
 
 ## 🚀 Features
 
@@ -41,20 +41,20 @@
 
 ### 🐍 Python Library
 ```python
-import simlab
+import physimlab
 
 # Simple usage with configuration file
-result = simlab.run_simulation(config_path="config.json")
+result = physimlab.run_simulation(config_path="config.json")
 print(f"Flight time: {result['summary']['flight_time']:.2f} s")
 
 # Advanced usage with configuration
-result = simlab.run_simulation(
+result = physimlab.run_simulation(
     config_path="config.json",
     output_dir="./results"
 )
 
 # Batch simulations with parameter sweep
-results = simlab.batch_simulation(
+results = physimlab.batch_simulation(
     config_path="config.json",
     parameters=[
         {"name": "mass", "min": 0.1, "max": 1.0, "steps": 5},
@@ -63,7 +63,7 @@ results = simlab.batch_simulation(
 )
 
 # Compare results
-comparison = simlab.compare_results(
+comparison = physimlab.compare_results(
     "./result1", 
     "./result2"
 )
@@ -89,41 +89,41 @@ print(f"HTML report: {output_files['html']}")
 ### 🖥️ Command Line Interface
 ```bash
 # Basic usage (configuration file required)
-$ simlab run --config config.json
-$ simlab run --config config.yaml
+$ physimlab run --config config.json
+$ physimlab run --config config.yaml
 
 # Advanced usage
-$ simlab run --config config.json --output ./results
-$ simlab batch --config config.json --param mass 0.1 0.5 5
-$ simlab compare ./result1 ./result2
+$ physimlab run --config config.json --output ./results
+$ physimlab batch --config config.json --param mass 0.1 0.5 5
+$ physimlab compare ./result1 ./result2
 
 # Information and management
-$ simlab list
-$ simlab info drop
-$ simlab version
-$ simlab init my_project --scenario drop
+$ physimlab list
+$ physimlab info drop
+$ physimlab version
+$ physimlab init my_project --scenario drop
 
 # Enhanced output options
-$ simlab run --config config.json --quiet          # Minimal output
-$ simlab run --config config.json --verbose        # Detailed output
+$ physimlab run --config config.json --quiet          # Minimal output
+$ physimlab run --config config.json --verbose        # Detailed output
 ```
 
 ## 📦 Installation
 
 ### PyPI (Recommended)
 ```bash
-pip install simlab
+pip install physimlab
 ```
 
 ### Development Version
 ```bash
-pip install git+https://github.com/rehanguha/SimLab.git
+pip install git+https://github.com/rehanguha/physimlab.git
 ```
 
 ### From Source
 ```bash
-git clone https://github.com/rehanguha/SimLab.git
-cd SimLab
+git clone https://github.com/rehanguha/physimlab.git
+cd physimlab
 pip install -e .
 ```
 
@@ -132,18 +132,18 @@ pip install -e .
 ### 1. Basic Simulation
 ```bash
 # Run with configuration file (required)
-simlab run --config config.json
+physimlab run --config config.json
 
 # Run with custom configuration
-simlab run --config my_config.json --output ./results
+physimlab run --config my_config.json --output ./results
 ```
 
 ### 2. Python API
 ```python
-import simlab
+import physimlab
 
 # Run simulation with configuration
-result = simlab.run_simulation(config_path="config.json")
+result = physimlab.run_simulation(config_path="config.json")
 
 # Access results
 summary = result['summary']
@@ -183,11 +183,11 @@ Create a `config.json` file:
 
 ## 📋 CLI Reference
 
-### `simlab run`
+### `physimlab run`
 Run a ball drop simulation with specified configuration.
 
 ```bash
-simlab run --config CONFIG [OPTIONS]
+physimlab run --config CONFIG [OPTIONS]
 ```
 
 **Required:**
@@ -200,11 +200,11 @@ simlab run --config CONFIG [OPTIONS]
 
 **Note:** Configuration file is required. Individual parameters (height, mass, radius, spin) are no longer supported - use configuration files instead.
 
-### `simlab batch`
+### `physimlab batch`
 Run batch simulations with parameter sweep.
 
 ```bash
-simlab batch --config CONFIG --param PARAM [PARAM ...]
+physimlab batch --config CONFIG --param PARAM [PARAM ...]
 ```
 
 **Required:**
@@ -213,25 +213,25 @@ simlab batch --config CONFIG --param PARAM [PARAM ...]
 
 **Example:**
 ```bash
-simlab batch --config config.json --param mass 0.1 0.5 5
+physimlab batch --config config.json --param mass 0.1 0.5 5
 ```
 
-### `simlab compare`
+### `physimlab compare`
 Compare two simulation results.
 
 ```bash
-simlab compare RESULT1 RESULT2
+physimlab compare RESULT1 RESULT2
 ```
 
 **Arguments:**
 - `RESULT1`: First result directory
 - `RESULT2`: Second result directory
 
-### `simlab list`
+### `physimlab list`
 List available scenarios.
 
 ```bash
-simlab list
+physimlab list
 ```
 
 **Available scenarios:**
@@ -240,28 +240,28 @@ simlab list
 - `terminal-velocity`: Terminal velocity measurement
 - `projectile`: Projectile motion with drag
 
-### `simlab info`
+### `physimlab info`
 Show information about a scenario.
 
 ```bash
-simlab info [SCENARIO]
+physimlab info [SCENARIO]
 ```
 
 **Arguments:**
 - `SCENARIO`: Scenario to show information for (default: drop)
 
-### `simlab version`
+### `physimlab version`
 Show version information.
 
 ```bash
-simlab version
+physimlab version
 ```
 
-### `simlab init`
-Initialize a new SimLab project.
+### `physimlab init`
+Initialize a new physimlab project.
 
 ```bash
-simlab init NAME --output DIR --scenario SCENARIO
+physimlab init NAME --output DIR --scenario SCENARIO
 ```
 
 **Arguments:**
@@ -352,7 +352,7 @@ outputs/
 ## 🏗️ Package Structure
 
 ```
-simlab/
+physimlab/
 ├── __init__.py         # Package entry point
 ├── cli.py              # Typer CLI interface with rich formatting
 ├── core.py             # Main simulation engine and API functions
@@ -381,13 +381,13 @@ simlab/
 
 Run the test suite:
 ```bash
-pip install simlab[dev]
+pip install physimlab[dev]
 pytest
 ```
 
 Run with coverage:
 ```bash
-pytest --cov=simlab --cov-report=html
+pytest --cov=physimlab --cov-report=html
 ```
 
 ## 🤝 Contributing
@@ -401,7 +401,7 @@ pytest --cov=simlab --cov-report=html
 
 ## 📄 License
 
-**SimLab** is licensed under the [Apache License 2.0](LICENSE).
+**physimlab** is licensed under the [Apache License 2.0](LICENSE).
 
 ```
 Copyright 2026 Rehan Guha
@@ -432,8 +432,8 @@ limitations under the License.
 
 For questions, bug reports, or feature requests:
 
-- **GitHub Issues**: [https://github.com/rehanguha/SimLab/issues](https://github.com/rehanguha/SimLab/issues)
-- **Documentation**: [GitHub README](https://github.com/rehanguha/SimLab/blob/main/README.md)
+- **GitHub Issues**: [https://github.com/rehanguha/physimlab/issues](https://github.com/rehanguha/physimlab/issues)
+- **Documentation**: [GitHub README](https://github.com/rehanguha/physimlab/blob/main/README.md)
 
 ## 🏷️ Keywords
 

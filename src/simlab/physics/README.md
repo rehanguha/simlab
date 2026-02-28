@@ -1,6 +1,6 @@
 # Physics Module
 
-This directory contains all the physics calculations and models used by SimLab for simulating physical systems.
+This directory contains all the physics calculations and models used by physimlab for simulating physical systems.
 
 ## Overview
 
@@ -135,7 +135,7 @@ apply_collision_response(velocity, normal, restitution, friction)
 
 ### Basic Aerodynamics
 ```python
-from simlab.physics import calculate_density, calculate_drag_coefficient
+from physimlab.physics import calculate_density, calculate_drag_coefficient
 
 # Calculate air density at 25°C with 50% humidity
 density = calculate_density(temperature=298.15, humidity=0.5)
@@ -147,7 +147,7 @@ cd = calculate_drag_coefficient(reynolds)
 
 ### Advanced Integration
 ```python
-from simlab.physics.numerical import AdaptiveRK45
+from physimlab.physics.numerical import AdaptiveRK45
 
 # Create adaptive integrator
 integrator = AdaptiveRK45(
@@ -164,7 +164,7 @@ solution = integrator.solve()
 
 ### Wind Effects
 ```python
-from simlab.physics.wind import calculate_wind_velocity, generate_gust_process
+from physimlab.physics.wind import calculate_wind_velocity, generate_gust_process
 
 # Calculate wind velocity at different heights
 wind_speed = calculate_wind_velocity(
@@ -183,7 +183,7 @@ gust = generate_gust_process(
 
 ### Contact Physics
 ```python
-from simlab.physics.contact import detect_collision, apply_collision_response
+from physimlab.physics.contact import detect_collision, apply_collision_response
 
 # Detect collision with ground
 collision_detected = detect_collision(position, surface_geometry)

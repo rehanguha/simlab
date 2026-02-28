@@ -1,6 +1,6 @@
 # Configuration Module
 
-This directory contains the configuration handling system for SimLab, responsible for loading, validating, and managing simulation parameters.
+This directory contains the configuration handling system for physimlab, responsible for loading, validating, and managing simulation parameters.
 
 ## Overview
 
@@ -16,7 +16,7 @@ config/
 
 ## Configuration File Format
 
-SimLab supports both JSON and YAML configuration files with the same structure. The configuration defines all parameters needed for a simulation including:
+physimlab supports both JSON and YAML configuration files with the same structure. The configuration defines all parameters needed for a simulation including:
 
 - **Scenario Settings**: Type of simulation to run
 - **Object Properties**: Physical properties of the simulated object
@@ -125,7 +125,7 @@ Defines output formats and file management:
 
 ### Loading Configuration
 ```python
-from simlab.config import load_config
+from physimlab.config import load_config
 
 # Load from JSON file
 config = load_config("config.json")
@@ -139,7 +139,7 @@ config = load_config("config.json", validate=True)
 
 ### Configuration Validation
 ```python
-from simlab.config import validate_config
+from physimlab.config import validate_config
 
 # Validate configuration
 is_valid, errors = validate_config(config)

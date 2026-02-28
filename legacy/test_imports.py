@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script to verify SimLab package imports work correctly.
+Test script to verify physimlab package imports work correctly.
 """
 
 def test_basic_imports():
@@ -8,31 +8,31 @@ def test_basic_imports():
     print("Testing basic imports...")
     
     try:
-        import simlab
-        print("✓ simlab package imported successfully")
-        print(f"  Version: {simlab.__version__}")
-        print(f"  Author: {simlab.__author__}")
-        print(f"  License: {simlab.__license__}")
+        import physimlab
+        print("✓ physimlab package imported successfully")
+        print(f"  Version: {physimlab.__version__}")
+        print(f"  Author: {physimlab.__author__}")
+        print(f"  License: {physimlab.__license__}")
     except ImportError as e:
-        print(f"✗ Failed to import simlab: {e}")
+        print(f"✗ Failed to import physimlab: {e}")
         return False
     
     try:
-        from simlab import run_simulation
+        from physimlab import run_simulation
         print("✓ run_simulation function imported successfully")
     except ImportError as e:
         print(f"✗ Failed to import run_simulation: {e}")
         return False
     
     try:
-        from simlab import batch_simulation
+        from physimlab import batch_simulation
         print("✓ batch_simulation function imported successfully")
     except ImportError as e:
         print(f"✗ Failed to import batch_simulation: {e}")
         return False
     
     try:
-        from simlab import compare_results
+        from physimlab import compare_results
         print("✓ compare_results function imported successfully")
     except ImportError as e:
         print(f"✗ Failed to import compare_results: {e}")
@@ -45,10 +45,10 @@ def test_submodule_imports():
     print("\nTesting submodule imports...")
     
     modules_to_test = [
-        'simlab.config',
-        'simlab.physics',
-        'simlab.output',
-        'simlab.utils'
+        'physimlab.config',
+        'physimlab.physics',
+        'physimlab.output',
+        'physimlab.utils'
     ]
     
     for module_name in modules_to_test:
@@ -66,7 +66,7 @@ def test_cli_import():
     print("\nTesting CLI import...")
     
     try:
-        from simlab.cli import app
+        from physimlab.cli import app
         print("✓ CLI app imported successfully")
     except ImportError as e:
         print(f"✗ Failed to import CLI: {e}")
@@ -79,7 +79,7 @@ def test_core_imports():
     print("\nTesting core simulation imports...")
     
     try:
-        from simlab.core import run_simulation
+        from physimlab.core import run_simulation
         print("✓ Core run_simulation imported successfully")
     except ImportError as e:
         print(f"✗ Failed to import core run_simulation: {e}")
@@ -89,7 +89,7 @@ def test_core_imports():
 
 def main():
     """Run all import tests."""
-    print("SimLab Import Test")
+    print("physimlab Import Test")
     print("=" * 50)
     
     all_passed = True

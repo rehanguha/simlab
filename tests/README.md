@@ -1,10 +1,10 @@
 # Test Suite
 
-This directory contains the comprehensive test suite for SimLab, ensuring the reliability and accuracy of the physics simulation library.
+This directory contains the comprehensive test suite for physimlab, ensuring the reliability and accuracy of the physics simulation library.
 
 ## Overview
 
-The test suite is organized to validate all aspects of the SimLab library including physics calculations, numerical methods, configuration handling, output generation, and integration scenarios. Tests follow pytest conventions and include both unit tests and integration tests.
+The test suite is organized to validate all aspects of the physimlab library including physics calculations, numerical methods, configuration handling, output generation, and integration scenarios. Tests follow pytest conventions and include both unit tests and integration tests.
 
 ## Test Structure
 
@@ -87,7 +87,7 @@ Common test fixtures are defined in `conftest.py`:
 ```python
 import pytest
 import numpy as np
-from simlab.config import load_config
+from physimlab.config import load_config
 
 @pytest.fixture
 def sample_config():
@@ -131,7 +131,7 @@ pytest tests/test_physics.py::test_calculate_density
 ### Test Coverage
 ```bash
 # Run tests with coverage
-pytest --cov=simlab --cov-report=html
+pytest --cov=physimlab --cov-report=html
 
 # View coverage report
 open htmlcov/index.html
@@ -161,7 +161,7 @@ pytest tests/test_mathematical_accuracy.py --precision=1e-12
 ```python
 import pytest
 import numpy as np
-from simlab.physics import calculate_density, calculate_drag_coefficient
+from physimlab.physics import calculate_density, calculate_drag_coefficient
 
 def test_calculate_density():
     """Test air density calculation"""
@@ -185,7 +185,7 @@ def test_drag_coefficient_reynolds_dependency():
 ### Configuration Test
 ```python
 import pytest
-from simlab.config import load_config, validate_config
+from physimlab.config import load_config, validate_config
 
 def test_config_loading():
     """Test configuration file loading"""
@@ -212,7 +212,7 @@ def test_config_validation():
 ### Integration Test
 ```python
 import pytest
-from simlab import run_simulation
+from physimlab import run_simulation
 
 def test_complete_simulation_workflow(sample_config):
     """Test complete simulation workflow"""
@@ -277,7 +277,7 @@ jobs:
     - name: Run tests
       run: pytest
     - name: Run coverage
-      run: pytest --cov=simlab --cov-report=xml
+      run: pytest --cov=physimlab --cov-report=xml
 ```
 
 ### Test Requirements

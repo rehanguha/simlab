@@ -11,7 +11,7 @@ from typing import Dict, Any, Union
 from pathlib import Path
 
 class ConfigLoader:
-    """Configuration loader for SimLab."""
+    """Configuration loader for physimlab."""
     
     def load(self, config_path: str) -> Dict[str, Any]:
         """

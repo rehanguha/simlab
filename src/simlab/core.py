@@ -1,5 +1,5 @@
 """
-SimLab Core - Main Simulation Engine
+physimlab Core - Main Simulation Engine
 
 Wraps the existing physics simulation code into a clean, modern API.
 """
@@ -34,11 +34,11 @@ from .config.loader import ConfigLoader
 from .output.manager import OutputManager
 from .output.result import Result
 
-class SimLabError(Exception):
-    """Base exception for SimLab errors."""
+class physimlabError(Exception):
+    """Base exception for physimlab errors."""
     pass
 
-class SimulationError(SimLabError):
+class SimulationError(physimlabError):
     """Error during simulation execution."""
     pass
 
@@ -676,7 +676,7 @@ def _load_result(result_path: str) -> Dict[str, Any]:
         with open(result_file, 'r') as f:
             return json.load(f)
     
-    raise SimLabError(f"Result file not found: {result_file}")
+    raise physimlabError(f"Result file not found: {result_file}")
 
 def _compare_results_data(result1: Dict[str, Any], result2: Dict[str, Any]) -> Dict[str, Any]:
     """Compare two simulation results."""

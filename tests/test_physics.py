@@ -1,5 +1,5 @@
 """
-Comprehensive tests for simlab.physics module.
+Comprehensive tests for physimlab.physics module.
 Tests physics calculations including aerodynamics and mechanics.
 """
 
@@ -10,7 +10,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from simlab.physics import (
+from physimlab.physics import (
     calculate_density,
     calculate_viscosity,
     calculate_speed_of_sound,

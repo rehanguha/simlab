@@ -1,6 +1,6 @@
 # Configuration Examples
 
-This directory contains example configuration files and generated reports for various simulation scenarios in SimLab.
+This directory contains example configuration files and generated reports for various simulation scenarios in physimlab.
 
 ## Overview
 
@@ -91,18 +91,18 @@ configs/
 ### Basic Usage
 ```bash
 # Run simulation with specific configuration
-simlab run --config configs/config_high_wind.json
+physimlab run --config configs/config_high_wind.json
 
 # Run with custom output directory
-simlab run --config configs/config_spin_effect.json --output ./my_results
+physimlab run --config configs/config_spin_effect.json --output ./my_results
 ```
 
 ### Python API Usage
 ```python
-import simlab
+import physimlab
 
 # Load and run configuration
-result = simlab.run_simulation(
+result = physimlab.run_simulation(
     config_path="configs/config_terminal_velocity.json",
     output_dir="./terminal_velocity_results"
 )
@@ -271,7 +271,7 @@ For custom scenarios, extend the configuration:
 
 ## Dependencies
 
-- **SimLab Library**: Core simulation engine
+- **physimlab Library**: Core simulation engine
 - **JSON/YAML Parser**: For configuration file parsing
 - **Validation Schema**: For configuration validation
 - **Report Generator**: For HTML report generation

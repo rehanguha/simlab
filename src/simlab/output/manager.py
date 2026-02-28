@@ -28,7 +28,7 @@ class OutputManager:
         """
         if output_dir is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            self.output_dir = Path(f"outputs/simlab_{timestamp}")
+            self.output_dir = Path(f"outputs/physimlab_{timestamp}")
         else:
             self.output_dir = Path(output_dir)
         
@@ -294,7 +294,7 @@ class OutputManager:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimLab Simulation Report</title>
+    <title>physimlab Simulation Report</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>{css_styles}</style>
 </head>
@@ -766,7 +766,7 @@ class OutputManager:
         // Add any additional JavaScript for interactivity here
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize tooltips or other interactive elements
-            console.log('SimLab Report loaded successfully');
+            console.log('physimlab Report loaded successfully');
         });
         </script>
         """

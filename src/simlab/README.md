@@ -1,15 +1,15 @@
-# SimLab Source Code
+# physimlab Source Code
 
-This directory contains the main SimLab physics simulation library source code.
+This directory contains the main physimlab physics simulation library source code.
 
 ## Overview
 
-SimLab is a comprehensive physics simulation framework designed for scientific research and engineering analysis. The library provides advanced physics models for aerodynamics, mechanics, and numerical integration with support for various output formats.
+physimlab is a comprehensive physics simulation framework designed for scientific research and engineering analysis. The library provides advanced physics models for aerodynamics, mechanics, and numerical integration with support for various output formats.
 
 ## Package Structure
 
 ```
-src/simlab/
+src/physimlab/
 ├── __init__.py          # Package entry point and public API
 ├── cli.py              # Typer-based command-line interface
 ├── core.py             # Main simulation engine and API functions
@@ -59,10 +59,10 @@ src/simlab/
 
 ### Basic Simulation
 ```python
-import simlab
+import physimlab
 
 # Run simulation with configuration file
-result = simlab.run_simulation(config_path="config.json")
+result = physimlab.run_simulation(config_path="config.json")
 
 # Access results
 summary = result['summary']
@@ -73,7 +73,7 @@ print(f"Flight time: {summary['flight_time']:.3f} seconds")
 ### Advanced Usage
 ```python
 # Batch simulation with parameter sweep
-results = simlab.batch_simulation(
+results = physimlab.batch_simulation(
     config_path="config.json",
     parameters=[
         {"name": "mass", "min": 0.1, "max": 1.0, "steps": 5},
@@ -82,19 +82,19 @@ results = simlab.batch_simulation(
 )
 
 # Compare results
-comparison = simlab.compare_results("./result1", "./result2")
+comparison = physimlab.compare_results("./result1", "./result2")
 ```
 
 ### Command Line
 ```bash
 # Run simulation
-simlab run --config config.json
+physimlab run --config config.json
 
 # Batch processing
-simlab batch --config config.json --param mass 0.1 0.5 5
+physimlab batch --config config.json --param mass 0.1 0.5 5
 
 # Compare results
-simlab compare ./result1 ./result2
+physimlab compare ./result1 ./result2
 ```
 
 ## Dependencies
@@ -123,13 +123,13 @@ simlab compare ./result1 ./result2
 ### Testing
 Run the test suite:
 ```bash
-cd /home/rehanguha/Documents/GitHub/simlab
+cd /home/rehanguha/Documents/GitHub/physimlab
 pytest tests/
 ```
 
 Run with coverage:
 ```bash
-pytest --cov=simlab --cov-report=html
+pytest --cov=physimlab --cov-report=html
 ```
 
 ## Architecture Notes

@@ -1,5 +1,5 @@
 """
-SimLab CLI - Command Line Interface
+physimlab CLI - Command Line Interface
 
 Typer-based CLI for running physics simulations with rich output formatting.
 """
@@ -24,7 +24,7 @@ from .core import run_simulation, batch_simulation, compare_results
 from . import __version__, __author__, __license__
 
 app = typer.Typer(
-    name="simlab",
+    name="physimlab",
     help="Physics Simulation Laboratory - Ball Drop Simulation",
     add_completion=False,
     no_args_is_help=True
@@ -44,7 +44,7 @@ def run(
     # Show header
     if not quiet:
         console.print(Panel.fit(
-            f"[bold blue]SimLab v{__version__}[/bold blue]\n"
+            f"[bold blue]physimlab v{__version__}[/bold blue]\n"
             f"[dim]Physics Simulation Laboratory[/dim]",
             border_style="blue"
         ))
@@ -257,7 +257,7 @@ def batch(
     
     if not quiet:
         console.print(Panel.fit(
-            f"[bold blue]SimLab Batch v{__version__}[/bold blue]\n"
+            f"[bold blue]physimlab Batch v{__version__}[/bold blue]\n"
             f"[dim]Parameter Sweep Simulation[/dim]",
             border_style="blue"
         ))
@@ -341,7 +341,7 @@ def compare(
         
         if not quiet:
             console.print(Panel.fit(
-                f"[bold blue]SimLab Compare v{__version__}[/bold blue]\n"
+                f"[bold blue]physimlab Compare v{__version__}[/bold blue]\n"
                 f"[dim]Results Comparison[/dim]",
                 border_style="blue"
             ))
@@ -404,7 +404,7 @@ Simulates a ball falling under gravity with air resistance, Magnus effect, and g
 ## Example
 
 ```bash
-simlab run --config config.json
+physimlab run --config config.json
 ```
 
 ## Configuration File
@@ -437,7 +437,7 @@ simlab run --config config.json
 def version():
     """Show version information."""
     console.print(Panel(
-        f"[bold]SimLab v{__version__}[/bold]\n"
+        f"[bold]physimlab v{__version__}[/bold]\n"
         f"Author: {__author__}\n"
         f"License: {__license__}\n"
         f"Python: {sys.version.split()[0]}",
@@ -452,7 +452,7 @@ def init(
     output: str = typer.Option(".", "--output", "-o", help="Output directory"),
     scenario: str = typer.Option("drop", "--scenario", "-s", help="Default scenario"),
 ):
-    """Initialize a new SimLab project."""
+    """Initialize a new physimlab project."""
     
     project_dir = os.path.join(output, name)
     
@@ -491,12 +491,12 @@ def init(
     # Create README
     readme = f"""# {name}
 
-Physics simulation project created with SimLab.
+Physics simulation project created with physimlab.
 
 ## Quick Start
 
 ```bash
-simlab run --config config.json
+physimlab run --config config.json
 ```
 
 ## Configuration
